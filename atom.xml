@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>帆的笔记博客</title>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2017-04-25T12:36:01.871Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>da fan</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>hello</title>
+    <link href="http://yoursite.com/04/25/hello/"/>
+    <id>http://yoursite.com/04/25/hello/</id>
+    <published>2017-04-25T11:12:19.000Z</published>
+    <updated>2017-04-25T12:36:01.871Z</updated>
+    
+    <content type="html"><![CDATA[<p>#dafan<br>123</p>
+<p>##ddddd</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;#dafan&lt;br&gt;123&lt;/p&gt;
+&lt;p&gt;##ddddd&lt;/p&gt;
+
+    
+    </summary>
+    
+    
+      <category term="ggggg" scheme="http://yoursite.com/tags/ggggg/"/>
+    
+  </entry>
+  
+</feed>
