@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://zsdf.shop/"/>
-  <updated>2019-04-05T02:37:30.901Z</updated>
+  <updated>2019-04-05T02:45:58.450Z</updated>
   <id>http://zsdf.shop/</id>
   
   <author>
@@ -14,6 +14,26 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>shop_go_vue</title>
+    <link href="http://zsdf.shop/04/05/shop-go-vue/"/>
+    <id>http://zsdf.shop/04/05/shop-go-vue/</id>
+    <published>2019-04-05T02:44:58.000Z</published>
+    <updated>2019-04-05T02:45:58.450Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="一个购物网站"><a href="#一个购物网站" class="headerlink" title="一个购物网站"></a>一个购物网站</h1><h2 id="vue"><a href="#vue" class="headerlink" title="vue"></a>vue</h2><h2 id="beego"><a href="#beego" class="headerlink" title="beego"></a>beego</h2>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;一个购物网站&quot;&gt;&lt;a href=&quot;#一个购物网站&quot; class=&quot;headerlink&quot; title=&quot;一个购物网站&quot;&gt;&lt;/a&gt;一个购物网站&lt;/h1&gt;&lt;h2 id=&quot;vue&quot;&gt;&lt;a href=&quot;#vue&quot; class=&quot;headerlink&quot; title=&quot;vue
+    
+    </summary>
+    
+    
+      <category term="go vue" scheme="http://zsdf.shop/tags/go-vue/"/>
+    
+  </entry>
   
   <entry>
     <title>hello</title>

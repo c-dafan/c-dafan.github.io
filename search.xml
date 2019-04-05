@@ -3,6 +3,13 @@
   
     
     <entry>
+      <title><![CDATA[shop_go_vue]]></title>
+      <url>%2F04%2F05%2Fshop-go-vue%2F</url>
+      <content type="text"><![CDATA[一个购物网站vuebeego]]></content>
+    </entry>
+
+    
+    <entry>
       <title><![CDATA[hello]]></title>
       <url>%2F04%2F25%2Fhello%2F</url>
       <content type="text"><![CDATA[重拾博客]]></content>
