@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://zsdf.shop/"/>
-  <updated>2019-04-05T02:45:58.450Z</updated>
+  <updated>2019-04-05T03:24:21.410Z</updated>
   <id>http://zsdf.shop/</id>
   
   <author>
@@ -16,11 +16,47 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>test3</title>
+    <link href="http://zsdf.shop/04/05/test3/"/>
+    <id>http://zsdf.shop/04/05/test3/</id>
+    <published>2019-04-05T03:23:46.000Z</published>
+    <updated>2019-04-05T03:24:21.410Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+      <category term="hello world" scheme="http://zsdf.shop/categories/hello-world/"/>
+    
+    
+      <category term="test" scheme="http://zsdf.shop/tags/test/"/>
+    
+      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>addtitle</title>
+    <link href="http://zsdf.shop/04/05/addtitle/"/>
+    <id>http://zsdf.shop/04/05/addtitle/</id>
+    <published>2019-04-05T02:50:28.000Z</published>
+    <updated>2019-04-05T03:03:01.056Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+      <category term="test" scheme="http://zsdf.shop/tags/test/"/>
+    
+  </entry>
+  
+  <entry>
     <title>shop_go_vue</title>
     <link href="http://zsdf.shop/04/05/shop-go-vue/"/>
     <id>http://zsdf.shop/04/05/shop-go-vue/</id>
     <published>2019-04-05T02:44:58.000Z</published>
-    <updated>2019-04-05T02:45:58.450Z</updated>
+    <updated>2019-04-05T03:00:51.005Z</updated>
     
     <content type="html"><![CDATA[<h1 id="一个购物网站"><a href="#一个购物网站" class="headerlink" title="一个购物网站"></a>一个购物网站</h1><h2 id="vue"><a href="#vue" class="headerlink" title="vue"></a>vue</h2><h2 id="beego"><a href="#beego" class="headerlink" title="beego"></a>beego</h2>]]></content>
     
@@ -31,7 +67,7 @@
     </summary>
     
     
-      <category term="go vue" scheme="http://zsdf.shop/tags/go-vue/"/>
+      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
     
   </entry>
   
@@ -40,7 +76,7 @@
     <link href="http://zsdf.shop/04/25/hello/"/>
     <id>http://zsdf.shop/04/25/hello/</id>
     <published>2017-04-25T11:12:19.000Z</published>
-    <updated>2019-04-05T02:37:30.901Z</updated>
+    <updated>2019-04-05T03:02:09.642Z</updated>
     
     <content type="html"><![CDATA[<p>重拾博客</p>
 ]]></content>
@@ -53,7 +89,9 @@
     </summary>
     
     
-      <category term="555" scheme="http://zsdf.shop/tags/555/"/>
+      <category term="hello" scheme="http://zsdf.shop/tags/hello/"/>
+    
+      <category term="world" scheme="http://zsdf.shop/tags/world/"/>
     
   </entry>
   

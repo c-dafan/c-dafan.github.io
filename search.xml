@@ -3,6 +3,20 @@
   
     
     <entry>
+      <title><![CDATA[test3]]></title>
+      <url>%2F04%2F05%2Ftest3%2F</url>
+      <content type="text"></content>
+    </entry>
+
+    
+    <entry>
+      <title><![CDATA[addtitle]]></title>
+      <url>%2F04%2F05%2Faddtitle%2F</url>
+      <content type="text"></content>
+    </entry>
+
+    
+    <entry>
       <title><![CDATA[shop_go_vue]]></title>
       <url>%2F04%2F05%2Fshop-go-vue%2F</url>
       <content type="text"><![CDATA[一个购物网站vuebeego]]></content>
