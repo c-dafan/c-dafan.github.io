@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="go," />
+  <meta name="keywords" content="go,vue,beego," />
 
 
 
@@ -90,17 +90,19 @@
 
 
 
-<meta name="description" content="一个购物网站vuebeego">
-<meta name="keywords" content="go">
+<meta name="description" content="一个购物网站总结一个购物网站，数据库设计如下： 前端nodejs + vue-cli + Vue + Element-UI vue采用element-UI组件。记录一下体验： vue整体体验很好，通过router和router-view可以很好的提高前端布局代码的复用性。对我这种不擅长写前端，每次写前端ctrl+c，ctrl+v的真的是非常的友好。另外，数据的绑定、一些指令也是相当的好用 使用vu">
+<meta name="keywords" content="go,vue,beego">
 <meta property="og:type" content="article">
 <meta property="og:title" content="shop_go_vue">
 <meta property="og:url" content="http://zsdf.shop/04/05/shop-go-vue/index.html">
 <meta property="og:site_name" content="我的笔记">
-<meta property="og:description" content="一个购物网站vuebeego">
-<meta property="og:updated_time" content="2019-04-05T03:00:51.005Z">
+<meta property="og:description" content="一个购物网站总结一个购物网站，数据库设计如下： 前端nodejs + vue-cli + Vue + Element-UI vue采用element-UI组件。记录一下体验： vue整体体验很好，通过router和router-view可以很好的提高前端布局代码的复用性。对我这种不擅长写前端，每次写前端ctrl+c，ctrl+v的真的是非常的友好。另外，数据的绑定、一些指令也是相当的好用 使用vu">
+<meta property="og:image" content="https://github.com/c-dafan/Shop_GoVueWeb/blob/master/shop/static/shop.png">
+<meta property="og:updated_time" content="2019-04-06T04:00:55.269Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="shop_go_vue">
-<meta name="twitter:description" content="一个购物网站vuebeego">
+<meta name="twitter:description" content="一个购物网站总结一个购物网站，数据库设计如下： 前端nodejs + vue-cli + Vue + Element-UI vue采用element-UI组件。记录一下体验： vue整体体验很好，通过router和router-view可以很好的提高前端布局代码的复用性。对我这种不擅长写前端，每次写前端ctrl+c，ctrl+v的真的是非常的友好。另外，数据的绑定、一些指令也是相当的好用 使用vu">
+<meta name="twitter:image" content="https://github.com/c-dafan/Shop_GoVueWeb/blob/master/shop/static/shop.png">
 
 
 
@@ -308,6 +310,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Web</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -329,7 +353,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  7
+                  753
                 </span>
               
 
@@ -345,7 +369,7 @@
                   <span class="post-meta-item-text">阅读时长</span>
                 
                 <span title="阅读时长">
-                  1
+                  2
                 </span>
               
             </div>
@@ -363,7 +387,93 @@
       
 
       
-        <h1 id="一个购物网站"><a href="#一个购物网站" class="headerlink" title="一个购物网站"></a>一个购物网站</h1><h2 id="vue"><a href="#vue" class="headerlink" title="vue"></a>vue</h2><h2 id="beego"><a href="#beego" class="headerlink" title="beego"></a>beego</h2>
+        <h1 id="一个购物网站总结"><a href="#一个购物网站总结" class="headerlink" title="一个购物网站总结"></a>一个购物网站总结</h1><p>一个购物网站，数据库设计如下：<br><img src="https://github.com/c-dafan/Shop_GoVueWeb/blob/master/shop/static/shop.png" alt="数据库"></p>
+<p>前端nodejs + vue-cli + Vue + Element-UI</p>
+<h2 id="vue"><a href="#vue" class="headerlink" title="vue"></a>vue</h2><p>采用element-UI组件。记录一下体验：</p>
+<pre><code>vue整体体验很好，通过router和router-view可以很好的提高前端布局代码的复用性。对我这种不擅长写前端，每次写前端ctrl+c，ctrl+v的真的是非常的友好。另外，数据的绑定、一些指令也是相当的好用
+使用vue-cli工具，需要借助nodejs，可以实现前后端的分离。在vue-cli的工程上，目录结构很清晰，很容易写一个前端。不过需要一些nodejs的知识，不然学起来真的很难受。
+element-UI组件很好使用，不用懂很多css也能写出来很漂亮页面，有种纯写html最后得到带css效果的页面。
+</code></pre><p>笔记：</p>
+<blockquote>
+<p>父子组件通信</p>
+</blockquote>
+<ul>
+<li><p>v-model 数据双向绑定</p>
+</li>
+<li><p>v-on （@）事件</p>
+</li>
+<li><p>v-bind （:） 数据单向绑定</p>
+</li>
+</ul>
+<blockquote>
+<p>内置指令</p>
+</blockquote>
+<ul>
+<li><p>v-if、v-else、v-else-if 条件</p>
+</li>
+<li><p>v-for 循环 （o, i） in objs 其中i是索引，这个顺序好像和我见过的大部分语言相反</p>
+</li>
+</ul>
+<blockquote>
+<p>函数</p>
+</blockquote>
+<ul>
+<li><p>created</p>
+</li>
+<li><p>watch 一直观察这个变量</p>
+</li>
+<li><p>computed 一个变量通过函数结算出来</p>
+</li>
+</ul>
+<blockquote>
+<p>slot、props、scope</p>
+</blockquote>
+<ul>
+<li><p>slot 插槽</p>
+</li>
+<li><p>scope</p>
+</li>
+<li><p>props</p>
+</li>
+</ul>
+<h2 id="beego"><a href="#beego" class="headerlink" title="beego"></a>beego</h2><p>beego体验：</p>
+<pre><code>beego从入门到放弃，没有重新运行解决不了的问题，beego基于mvc三层的一个框架，只要学过其他语言的WEB，入手还是很容易的。
+学习go语言一天，入手beego，本着练习go语言的原则，写了这个项目。
+beego有个bee工具，使用起来很容易。bee generate 几乎直接把真的网站的代码都写完了，需要改一些逻辑。生成的controller中GetAll也太恨了，把整个数据库的信息可以按照任意条件都能查询到。
+</code></pre><p>项目中遇到的问题：</p>
+<pre><code>通过注释配url，这个不知道是我的问题，还是beego的问题。配好的url，第一次不起作用，需要把进程关了，然后重新运行。第一次运行会生成一个文件，但是进入url会404，第二次运行就没问题。
+beego的orm也很用，很简单的就能和数据库映射。查询外键中的对象很可以查询到，不过一旦用了外键，外键对应的就成为了一个结构体，在发post等请求时，传外键Id时，需要多写一个{}。
+</code></pre><p>beego笔记：</p>
+<blockquote>
+<p>bee</p>
+</blockquote>
+<pre><code>generate    生成代码
+new         创建
+pack        打包
+run         运行
+</code></pre><blockquote>
+<p>orm</p>
+</blockquote>
+<ul>
+<li><p>qs.RelatedSel() 加载外键</p>
+<pre><code>参数：要加载的外键名字，多层的话，可以使用__
+</code></pre></li>
+<li><p>qs.Limit(limit, offset)</p>
+</li>
+<li><p>struct</p>
+</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> Address <span class="keyword">struct</span> &#123;</div><div class="line">	Id             <span class="keyword">int</span>    <span class="string">`orm:"column(aid);auto"`</span></div><div class="line">	Uid            *User  <span class="string">`orm:"column(uid);null;rel(fk)"`</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// auto自增、</span></div><div class="line"><span class="comment">// null可以为空、默认为非空、</span></div><div class="line"><span class="comment">// auto_now_add;type(datetime) 自动放到当时时间</span></div><div class="line"><span class="comment">// auto_now;type(datetime) 自动放到当时时间</span></div><div class="line"><span class="comment">// 区别auto_now_add第一次添加的时间，更新时间不变，auto_now每次更新时间改变</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>Controller</p>
+</blockquote>
+<ul>
+<li><p>router</p>
+</li>
+<li><p>ServeJSON</p>
+</li>
+</ul>
+
       
     </div>
 
@@ -394,6 +504,10 @@
           
             <a href="/tags/go/" rel="tag"><i class="fa fa-tag"></i> go</a>
           
+            <a href="/tags/vue/" rel="tag"><i class="fa fa-tag"></i> vue</a>
+          
+            <a href="/tags/beego/" rel="tag"><i class="fa fa-tag"></i> beego</a>
+          
         </div>
       
 
@@ -405,18 +519,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/04/05/addtitle/" rel="next" title="addtitle">
-                <i class="fa fa-chevron-left"></i> addtitle
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/04/25/hello/" rel="prev" title="hello">
-                hello <i class="fa fa-chevron-right"></i>
+              <a href="/04/25/hello/" rel="prev" title="hello world">
+                hello world <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -489,7 +599,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">2</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -511,7 +621,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -546,7 +656,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一个购物网站"><span class="nav-number">1.</span> <span class="nav-text">一个购物网站</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#vue"><span class="nav-number">1.1.</span> <span class="nav-text">vue</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#beego"><span class="nav-number">1.2.</span> <span class="nav-text">beego</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一个购物网站总结"><span class="nav-number">1.</span> <span class="nav-text">一个购物网站总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#vue"><span class="nav-number">1.1.</span> <span class="nav-text">vue</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#beego"><span class="nav-number">1.2.</span> <span class="nav-text">beego</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -591,7 +701,7 @@
 </div>
 
 <div class="theme-info">
-  <span class="post-count">博客全站共11字</span>
+  <span class="post-count">博客全站共778字</span>
 </div>
 
 
