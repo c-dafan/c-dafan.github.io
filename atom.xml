@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://zsdf.shop/"/>
-  <updated>2019-04-07T13:59:41.304Z</updated>
+  <updated>2019-04-08T11:57:07.952Z</updated>
   <id>http://zsdf.shop/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://zsdf.shop/04/07/%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/"/>
     <id>http://zsdf.shop/04/07/面试准备/</id>
     <published>2019-04-07T06:22:33.000Z</published>
-    <updated>2019-04-07T13:59:41.304Z</updated>
+    <updated>2019-04-08T11:57:07.952Z</updated>
     
     <content type="html"><![CDATA[<h1 id="面试前准备"><a href="#面试前准备" class="headerlink" title="面试前准备"></a>面试前准备</h1><hr>
 <h2 id="python"><a href="#python" class="headerlink" title="python"></a>python</h2><p><a href="https://github.com/kenwoodjw/python_interview_question" target="_blank" rel="external">python面试题</a></p>
@@ -29,6 +29,7 @@
 <h2 id="rabbitmq"><a href="#rabbitmq" class="headerlink" title="rabbitmq"></a>rabbitmq</h2><p><a href="https://www.cnblogs.com/shenyixin/p/9084249.html" target="_blank" rel="external">rabbitmq复习</a></p>
 <p><a href="https://www.cnblogs.com/frankyou/p/5283539.html" target="_blank" rel="external">rabbitmq复习</a></p>
 <h2 id="springboot"><a href="#springboot" class="headerlink" title="springboot"></a>springboot</h2><p><a href="https://blog.csdn.net/zl1zl2zl3/article/details/83715633" target="_blank" rel="external">springboot</a><br><a href="https://www.cnblogs.com/3xmq/p/springboot.html" target="_blank" rel="external">springboot</a></p>
+<h2 id="go"><a href="#go" class="headerlink" title="go"></a>go</h2><p><a href="">golang</a></p>
 ]]></content>
     
     <summary type="html">
