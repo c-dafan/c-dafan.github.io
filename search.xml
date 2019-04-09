@@ -3,9 +3,16 @@
   
     
     <entry>
+      <title><![CDATA[GoNote]]></title>
+      <url>%2F04%2F09%2FGoNote%2F</url>
+      <content type="text"><![CDATA[golang你好函数类型 匿名函数go 函数也是一种类型，用于声明变量，接收变量值 12345678910package mainimport "fmt"type myFunc func(a int, b int) intfunc main()&#123; var myfunc myFunc myfunc = func(a int, b int) int &#123; return a+b &#125; fmt.Println(myfunc(1,2))&#125; 回调函数把函数当作一个参数 12345678910111213type myFunc func(a int, b int) intfunc calu(a int, b int, myfunc myFunc) int &#123; return myfunc(a, b)&#125;func main()&#123; var myfunc myFunc myfunc = func(a int, b int) int &#123; return a+b &#125; fmt.Println(calu(1,2, myfunc))&#125; 闭包闭包中变量，一直存在 12345678910111213func test02() func() int&#123; vv := 1 return func() int&#123; vv++ return vv &#125;&#125;func main()&#123; f := test02() fmt.Println(f()) fmt.Println(f())&#125; 匿名导入1import _ "fmt" 执行init函数 匿名字段继承 定义与初始化12345678910111213141516171819202122232425type people struct&#123; name string age int sex byte&#125;type student struct&#123; people id int&#125;func main() &#123; s := student&#123;people&#123;"aa",16,'m'&#125;,150706&#125; fmt.Println(s) s2 := student&#123;people:people&#123;name:"bb"&#125; id:160706&#125; fmt.Println(s2) // s3 := student&#123;"aa",16,'m',150706&#125; 错误用法 s4 := student&#123;&#125; s4.id = 170706 s4.name = "cc" s4.age = 17 s4.sex = 'm' fmt.Println(s4)&#125; 非结构字段12345678910111213141516171819202122type people struct&#123; name string age int sex byte&#125;type student struct&#123; people int&#125;func main() &#123; s := student&#123;people&#123;"aa",16,'m'&#125;,150706&#125; fmt.Println(s) s4 := student&#123;&#125; s4.int = 170706 s4.name = "cc" s4.age = 17 s4.sex = 'm' fmt.Println(s4)&#125; 同名字段就近原则 方法值与引用12345678910111213141516171819202122232425type people struct&#123; name string age int sex byte&#125;func (this *people) setinfoPointer()&#123; this.name = "a" this.age = 12 this.sex = 'm'&#125;func (this people) setinfo()&#123; this.name = "a" this.age = 12 this.sex = 'm'&#125;func main() &#123; p := people&#123;&#125; p.setinfo() // 无效 fmt.Println(p) p.setinfoPointer() fmt.Println(p)&#125; 接口空接口 类型断言12345678910111213141516171819202122232425262728293031type people struct&#123; name string age int sex byte&#125;func main() &#123; ii := make([]interface&#123;&#125;, 3) ii[0] = 1 ii[1] = "2" ii[2] = people&#123;name:"3"&#125; for _,d := range ii &#123; if val, ok:=d.(int); ok&#123; fmt.Println("int",val) &#125;else if val, ok:=d.(string); ok&#123; fmt.Println("string",val) &#125;else if val, ok:=d.(people); ok&#123; fmt.Println("people",val) &#125; &#125; for _,d := range ii &#123; switch value := d.(type) &#123; case int: fmt.Println("int",value) case string: fmt.Println("string",value) case people: fmt.Println("people",value) &#125; &#125;&#125;]]></content>
+    </entry>
+
+    
+    <entry>
       <title><![CDATA[面试准备]]></title>
       <url>%2F04%2F07%2F%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87%2F</url>
-      <content type="text"><![CDATA[面试前准备 pythonpython面试题 javajava面试题 redisredis入门 rabbitmqrabbitmq复习 rabbitmq复习 springbootspringbootspringboot gogolang]]></content>
+      <content type="text"><![CDATA[面试前准备 pythonpython面试题 javajava面试题 redisredis入门 rabbitmqrabbitmq复习 rabbitmq复习 springbootspringbootspringboot gogolang go]]></content>
     </entry>
 
     
