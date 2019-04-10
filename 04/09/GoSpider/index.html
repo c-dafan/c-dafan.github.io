@@ -90,17 +90,17 @@
 
 
 
-<meta name="description" content="##">
+<meta name="description" content="需要的 net/http 请求网络 正则表达式 提取内容 encode/json 解析json os 创建文件 并发  豆瓣电影评分获取请求12345678910111213141516response, err := http.Get(url)if err != nil &amp;#123;    return&amp;#125;buf := make([]byte, 4096)var str stringfo">
 <meta name="keywords" content="go,spider">
 <meta property="og:type" content="article">
 <meta property="og:title" content="go 爬虫">
 <meta property="og:url" content="http://zsdf.shop/04/09/GoSpider/index.html">
 <meta property="og:site_name" content="我的笔记">
-<meta property="og:description" content="##">
-<meta property="og:updated_time" content="2019-04-09T09:37:48.171Z">
+<meta property="og:description" content="需要的 net/http 请求网络 正则表达式 提取内容 encode/json 解析json os 创建文件 并发  豆瓣电影评分获取请求12345678910111213141516response, err := http.Get(url)if err != nil &amp;#123;    return&amp;#125;buf := make([]byte, 4096)var str stringfo">
+<meta property="og:updated_time" content="2019-04-10T06:44:29.457Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="go 爬虫">
-<meta name="twitter:description" content="##">
+<meta name="twitter:description" content="需要的 net/http 请求网络 正则表达式 提取内容 encode/json 解析json os 创建文件 并发  豆瓣电影评分获取请求12345678910111213141516response, err := http.Get(url)if err != nil &amp;#123;    return&amp;#125;buf := make([]byte, 4096)var str stringfo">
 
 
 
@@ -351,7 +351,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  0
+                  766
                 </span>
               
 
@@ -367,7 +367,7 @@
                   <span class="post-meta-item-text">阅读时长</span>
                 
                 <span title="阅读时长">
-                  1
+                  4
                 </span>
               
             </div>
@@ -385,7 +385,21 @@
       
 
       
-        <p>## </p>
+        <h2 id="需要的"><a href="#需要的" class="headerlink" title="需要的"></a>需要的</h2><ul>
+<li>net/http 请求网络</li>
+<li>正则表达式 提取内容</li>
+<li>encode/json 解析json</li>
+<li>os 创建文件</li>
+<li>并发</li>
+</ul>
+<h2 id="豆瓣电影评分"><a href="#豆瓣电影评分" class="headerlink" title="豆瓣电影评分"></a>豆瓣电影评分</h2><h3 id="获取请求"><a href="#获取请求" class="headerlink" title="获取请求"></a>获取请求</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">response, err := http.Get(url)</div><div class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">    <span class="keyword">return</span></div><div class="line">&#125;</div><div class="line">buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">4096</span>)</div><div class="line"><span class="keyword">var</span> str <span class="keyword">string</span></div><div class="line"><span class="keyword">for</span> <span class="literal">true</span> &#123;</div><div class="line">    n, err := response.Body.Read(buf)</div><div class="line">    <span class="keyword">if</span> n == <span class="number">0</span> &#123;</div><div class="line">        <span class="keyword">break</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &amp;&amp; err != io.EOF &#123;</div><div class="line">        <span class="keyword">return</span></div><div class="line">    &#125;</div><div class="line">    str += <span class="keyword">string</span>(buf[:n])</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h3><p>通过正则表达式获取内容</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">reg1 := regexp.MustCompile(<span class="string">`&lt;img width="100" alt="(?s:(.*?))"`</span>)</div><div class="line">reg2 := regexp.MustCompile(<span class="string">`&lt;span class="rating_num" property="v:average"&gt;(?s:(.*?))&lt;/span&gt;`</span>)</div><div class="line">reg3 := regexp.MustCompile(<span class="string">`&lt;span&gt;(?s:(\d*?))人评价&lt;/span&gt;`</span>)</div><div class="line">str1 := reg1.FindAllStringSubmatch(str, <span class="number">-1</span>)</div><div class="line">str2 := reg2.FindAllStringSubmatch(str, <span class="number">-1</span>)</div><div class="line">str3 := reg3.FindAllStringSubmatch(str, <span class="number">-1</span>)</div><div class="line"><span class="keyword">for</span> v := <span class="keyword">range</span> str3&#123;</div><div class="line">    fmt.Println(str1[v],str2[v],str3[v])</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="全部代码"><a href="#全部代码" class="headerlink" title="全部代码"></a>全部代码</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">//https://movie.douban.com/top250?start=75&amp;filter=</span></div><div class="line"><span class="comment">// &lt;img width="100" alt="</span></div><div class="line"><span class="comment">//&lt;span class="rating_num" property="v:average"&gt;8.7&lt;/span&gt;</span></div><div class="line"><span class="comment">// &lt;span&gt;620194人评价&lt;/span&gt;</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">spider</span><span class="params">(url <span class="keyword">string</span>, page <span class="keyword">chan</span> <span class="keyword">int</span>, v <span class="keyword">int</span>)</span></span> &#123;</div><div class="line">	response, err := http.Get(url)</div><div class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">		<span class="keyword">return</span></div><div class="line">	&#125;</div><div class="line">	buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">4096</span>)</div><div class="line">	<span class="keyword">var</span> str <span class="keyword">string</span></div><div class="line">	<span class="keyword">for</span> <span class="literal">true</span> &#123;</div><div class="line">		n, err := response.Body.Read(buf)</div><div class="line">		<span class="keyword">if</span> n == <span class="number">0</span> &#123;</div><div class="line">			<span class="keyword">break</span></div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &amp;&amp; err != io.EOF &#123;</div><div class="line">			<span class="keyword">return</span></div><div class="line">		&#125;</div><div class="line">		str += <span class="keyword">string</span>(buf[:n])</div><div class="line">	&#125;</div><div class="line">	reg1 := regexp.MustCompile(<span class="string">`&lt;img width="100" alt="(?s:(.*?))"`</span>)</div><div class="line">	reg2 := regexp.MustCompile(<span class="string">`&lt;span class="rating_num" property="v:average"&gt;(?s:(.*?))&lt;/span&gt;`</span>)</div><div class="line">	reg3 := regexp.MustCompile(<span class="string">`&lt;span&gt;(?s:(\d*?))人评价&lt;/span&gt;`</span>)</div><div class="line">	str1 := reg1.FindAllStringSubmatch(str, <span class="number">-1</span>)</div><div class="line">	str2 := reg2.FindAllStringSubmatch(str, <span class="number">-1</span>)</div><div class="line">	str3 := reg3.FindAllStringSubmatch(str, <span class="number">-1</span>)</div><div class="line">	<span class="keyword">for</span> v := <span class="keyword">range</span> str3&#123;</div><div class="line">		fmt.Println(str1[v],str2[v],str3[v])</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">defer</span> response.Body.Close()</div><div class="line">	page &lt;- v</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">working</span><span class="params">(start <span class="keyword">int</span>, end <span class="keyword">int</span>)</span></span> &#123;</div><div class="line">	page := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>)</div><div class="line">	<span class="keyword">for</span> v := start; v &lt;= end; v++ &#123;</div><div class="line">		url := fmt.Sprintf(<span class="string">"https://movie.douban.com/top250?start=%d&amp;filter="</span>, v*<span class="number">25</span>)</div><div class="line">		<span class="keyword">go</span> spider(url, page, v)</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> v := start; v &lt;= end; v++ &#123;</div><div class="line">		fmt.Println(&lt;-page)</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">var</span> start, end <span class="keyword">int</span></div><div class="line">	fmt.Scan(&amp;start)</div><div class="line">	fmt.Scan(&amp;end)</div><div class="line">	working(start, end)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="斗鱼"><a href="#斗鱼" class="headerlink" title="斗鱼"></a>斗鱼</h2><p>斗鱼通过后端传json到前端，然后解析json，在前端显示。请求部分同上</p>
+<h3 id="json解析部分"><a href="#json解析部分" class="headerlink" title="json解析部分"></a>json解析部分</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">jsonContent:=<span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">interface</span>&#123;&#125;)</div><div class="line">_ = json.Unmarshal([]<span class="keyword">byte</span>(str),&amp;jsonContent)</div><div class="line">data := jsonContent[<span class="string">"data"</span>]</div><div class="line">data2 := data.(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">interface</span>&#123;&#125;)</div><div class="line">data3 := data2[<span class="string">"rl"</span>].([]<span class="keyword">interface</span>&#123;&#125;)</div><div class="line"><span class="keyword">for</span> v := <span class="keyword">range</span> data3&#123;</div><div class="line">    fmt.Println(data3[v].(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">interface</span>&#123;&#125;)[<span class="string">"rs16"</span>])</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>json解析需要成一个string:interface{}的字典。空接口类型需要自己断言。一层一层找到需要的数据。</p>
+<h3 id="全部代码-1"><a href="#全部代码-1" class="headerlink" title="全部代码"></a>全部代码</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">import</span> (</div><div class="line">	<span class="string">"encoding/json"</span></div><div class="line">	<span class="string">"fmt"</span></div><div class="line">	<span class="string">"io"</span></div><div class="line">	<span class="string">"net/http"</span></div><div class="line">	<span class="string">"strconv"</span></div><div class="line">)</div><div class="line"></div><div class="line"><span class="comment">// https://www.douyu.com/gapi/rknc/directory/yzRec/4</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">spider</span><span class="params">(v <span class="keyword">int</span>, page <span class="keyword">chan</span> <span class="keyword">int</span>)</span></span>  &#123;</div><div class="line">	url := <span class="string">"https://www.douyu.com/gapi/rknc/directory/yzRec/"</span>+strconv.Itoa(v)</div><div class="line">	response, err := http.Get(url)</div><div class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span>&#123;</div><div class="line">		page &lt;- v</div><div class="line">		<span class="keyword">return</span></div><div class="line">	&#125;</div><div class="line">	<span class="keyword">var</span> str <span class="keyword">string</span></div><div class="line">	buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">4096</span>)</div><div class="line">	<span class="keyword">for</span> <span class="literal">true</span> &#123;</div><div class="line">		n, err:= response.Body.Read(buf)</div><div class="line">		<span class="keyword">if</span> n == <span class="number">0</span> &#123;</div><div class="line">			<span class="keyword">break</span></div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &amp;&amp; err != io.EOF &#123;</div><div class="line">			page &lt;- v</div><div class="line">			<span class="keyword">return</span></div><div class="line">		&#125;</div><div class="line">		str += <span class="keyword">string</span>(buf[:n])</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">defer</span> response.Body.Close()</div><div class="line"></div><div class="line">	<span class="comment">//json.Unmarshal([]byte(str), )</span></div><div class="line">	<span class="comment">//reg := regexp.MustCompile(`(https://rpic.douyucdn.cn/live-cover/.*?)"`)</span></div><div class="line">	<span class="comment">//pngs := reg.FindAllStringSubmatch(str, -1)</span></div><div class="line">	<span class="comment">//for v:= range pngs&#123;</span></div><div class="line">	<span class="comment">//	fmt.Println(pngs[v])</span></div><div class="line">	<span class="comment">//&#125;</span></div><div class="line">	jsonContent:=<span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">interface</span>&#123;&#125;)</div><div class="line">	_ = json.Unmarshal([]<span class="keyword">byte</span>(str),&amp;jsonContent)</div><div class="line">	data := jsonContent[<span class="string">"data"</span>]</div><div class="line">	data2 := data.(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">interface</span>&#123;&#125;)</div><div class="line">	data3 := data2[<span class="string">"rl"</span>].([]<span class="keyword">interface</span>&#123;&#125;)</div><div class="line">	<span class="keyword">for</span> v := <span class="keyword">range</span> data3&#123;</div><div class="line">		fmt.Println(data3[v].(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">interface</span>&#123;&#125;)[<span class="string">"rs16"</span>])</div><div class="line">	&#125;</div><div class="line">	page &lt;- v</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">DouSpider</span><span class="params">(start <span class="keyword">int</span>, end <span class="keyword">int</span>)</span></span>  &#123;</div><div class="line">	page := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>)</div><div class="line">	<span class="keyword">for</span> v := start; v &lt;= end; v++ &#123;</div><div class="line">		<span class="keyword">go</span> spider(v, page)</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> v := start; v &lt;= end; v++ &#123;</div><div class="line">		fmt.Println(&lt;-page)</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">var</span> start, end <span class="keyword">int</span></div><div class="line">	fmt.Scan(&amp;start)</div><div class="line">	fmt.Scan(&amp;end)</div><div class="line">	DouSpider(start, end)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -489,8 +503,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -505,7 +528,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -527,7 +550,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -552,6 +575,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#需要的"><span class="nav-number">1.</span> <span class="nav-text">需要的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#豆瓣电影评分"><span class="nav-number">2.</span> <span class="nav-text">豆瓣电影评分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#获取请求"><span class="nav-number">2.1.</span> <span class="nav-text">获取请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正则表达式"><span class="nav-number">2.2.</span> <span class="nav-text">正则表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全部代码"><span class="nav-number">2.3.</span> <span class="nav-text">全部代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#斗鱼"><span class="nav-number">3.</span> <span class="nav-text">斗鱼</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#json解析部分"><span class="nav-number">3.1.</span> <span class="nav-text">json解析部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全部代码-1"><span class="nav-number">3.2.</span> <span class="nav-text">全部代码</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -591,7 +630,7 @@
 </div>
 
 <div class="theme-info">
-  <span class="post-count">博客全站共1.7k字</span>
+  <span class="post-count">博客全站共2.7k字</span>
 </div>
 
 
