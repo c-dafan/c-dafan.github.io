@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://zsdf.shop/"/>
-  <updated>2019-04-10T06:19:25.820Z</updated>
+  <updated>2019-04-12T03:55:55.306Z</updated>
   <id>http://zsdf.shop/</id>
   
   <author>
@@ -14,6 +14,71 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Lightsocks环境配置</title>
+    <link href="http://zsdf.shop/04/12/Lightsocks%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
+    <id>http://zsdf.shop/04/12/Lightsocks环境配置/</id>
+    <published>2019-04-12T01:03:48.000Z</published>
+    <updated>2019-04-12T03:55:55.306Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://github.com/gwuhaolin/blog/issues/12" target="_blank" rel="external">你也能写个 Shadowsocks</a></p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>通过SOCKS5代理，<a href="https://github.com/gwuhaolin/lightsocks" target="_blank" rel="external">代码见</a>,</p>
+<p>代码运行方法很简单，先运行server然后运行local，但是现在有个问题，如何才能让访问通过local的端口发出呢？<br>这个可以通过浏览器设置代理ip和端口，把代理ip和端口设置成local监听的端口，然后就可以访问到local。设置方法：</p>
+<ul>
+<li>这里使用的是chrome，</li>
+<li>进入设置</li>
+<li>进入高级设置</li>
+<li>代理设置</li>
+<li>这时候会弹出系统弹出窗</li>
+<li>局域网（LAN）设置</li>
+<li>在新的弹出窗可以看到</li>
+</ul>
+<p>现在可以访问local了，local也可以把数据转发到server，但是现在还有一个问题。server是直接把链接断掉，因为这个使用SOCKS5，server发现不是SOCKS5后，就丢弃了。local只是直接做了转发，需要浏览器直接设置为SOCKS5代理。</p>
+<ul>
+<li>这个使用的是chrome，需要一个插件</li>
+<li>下载插件<a href="https://github.com/FelisCatus/SwitchyOmega/releases" target="_blank" rel="external">SwitchyOmega</a></li>
+<li>进入扩展程序，打开开发者模式，把下载的crx文件直接拖进去就可以直接安装了</li>
+<li>进入SwitchyOmega界面，</li>
+<li>新建模式，填写协议，ip：port</li>
+<li>应用选项。</li>
+</ul>
+<h2 id="扩展功能"><a href="#扩展功能" class="headerlink" title="扩展功能"></a>扩展功能</h2><p>在代码中，可见server.go 文件。在文件中，handleConn方法主要做转发处理。所以这里对handleConn方法，这修改就可以了。</p>
+<h3 id="输出日志"><a href="#输出日志" class="headerlink" title="输出日志"></a>输出日志</h3><p>我这里需要建立链接的日志，日志内容包括时间和源ip与目标ip。做一下修改就可以。</p>
+<blockquote>
+<p>首先修改securetcp中struct</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> Addr <span class="keyword">interface</span> &#123;</div><div class="line">	Network() <span class="keyword">string</span> <span class="comment">// name of the network (for example, "tcp", "udp")</span></div><div class="line">	String() <span class="keyword">string</span>  <span class="comment">// string form of address (for example, "192.0.2.1:25", "[2001:db8::1]:80")</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 加密传输的 TCP Socket</span></div><div class="line"><span class="keyword">type</span> SecureTCPConn <span class="keyword">struct</span> &#123;</div><div class="line">	io.ReadWriteCloser</div><div class="line">	Address Addr</div><div class="line">	Cipher *cipher</div><div class="line">&#125;</div><div class="line"><span class="string">`</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>然后在这里输出local-&gt;server日志即可</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">    <span class="comment">// 进行转发</span></div><div class="line">    <span class="comment">// 从 localUser 读取数据发送到 dstServer</span></div><div class="line">    <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</div><div class="line">        err := localConn.DecodeCopy(dstServer)</div><div class="line">        log.Println(time.Now(),<span class="string">"目标地址："</span>, dstServer.RemoteAddr(),<span class="string">"源地址："</span>, localConn.Address) <span class="comment">// 增加</span></div><div class="line">        <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">            <span class="comment">// 在 copy 的过程中可能会存在网络超时等 error 被 return，只要有一个发生了错误就退出本次工作</span></div><div class="line">            localConn.Close()</div><div class="line">            dstServer.Close()</div><div class="line">        &#125;</div><div class="line">    &#125;()</div><div class="line"><span class="string">`</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>server -&gt; local 日志 需要做以下修改</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">(&amp;SecureTCPConn&#123;</div><div class="line">		Cipher:          localConn.Cipher,</div><div class="line">		Address: dstServer.RemoteAddr(),</div><div class="line">		ReadWriteCloser: dstServer,</div><div class="line">	&#125;).EncodeCopyServer(localConn) <span class="comment">// 把EncodeCopy改为EncodeCopyServer方法</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>在securetcp创建EncodeCopyServer方法</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(secureSocket *SecureTCPConn)</span> <span class="title">EncodeCopyServer</span><span class="params">(dst *SecureTCPConn)</span> <span class="title">error</span></span> &#123;</div><div class="line">	log.Println(time.Now(),<span class="string">"目标地址："</span>, dst.Address,<span class="string">"源地址："</span>, secureSocket.Address)</div><div class="line">	<span class="keyword">return</span> secureSocket.EncodeCopy(dst)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>现在运行，可以看到有日志的输出。</p>
+<h2 id="修改后代码可见github"><a href="#修改后代码可见github" class="headerlink" title="修改后代码可见github"></a>修改后代码可见<a href="https://github.com/c-dafan/lightsocks" target="_blank" rel="external">github</a></h2>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;https://github.com/gwuhaolin/blog/issues/12&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;你也能写个 Shadowsocks&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;环境搭建&quot;&gt;&lt;a href=&quot;#环境
+    
+    </summary>
+    
+      <category term="计算机网络" scheme="http://zsdf.shop/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
+    
+      <category term="代理" scheme="http://zsdf.shop/tags/%E4%BB%A3%E7%90%86/"/>
+    
+  </entry>
   
   <entry>
     <title>NAT一探究竟</title>
@@ -41,11 +106,11 @@
       <category term="计算机网络" scheme="http://zsdf.shop/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     
     
+      <category term="代理" scheme="http://zsdf.shop/tags/%E4%BB%A3%E7%90%86/"/>
+    
       <category term="NAT" scheme="http://zsdf.shop/tags/NAT/"/>
     
       <category term="socket" scheme="http://zsdf.shop/tags/socket/"/>
-    
-      <category term="代理" scheme="http://zsdf.shop/tags/%E4%BB%A3%E7%90%86/"/>
     
       <category term="VPN" scheme="http://zsdf.shop/tags/VPN/"/>
     

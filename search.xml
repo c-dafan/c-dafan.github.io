@@ -3,6 +3,13 @@
   
     
     <entry>
+      <title><![CDATA[Lightsocks环境配置]]></title>
+      <url>%2F04%2F12%2FLightsocks%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%2F</url>
+      <content type="text"><![CDATA[你也能写个 Shadowsocks 环境搭建通过SOCKS5代理，代码见, 代码运行方法很简单，先运行server然后运行local，但是现在有个问题，如何才能让访问通过local的端口发出呢？这个可以通过浏览器设置代理ip和端口，把代理ip和端口设置成local监听的端口，然后就可以访问到local。设置方法： 这里使用的是chrome， 进入设置 进入高级设置 代理设置 这时候会弹出系统弹出窗 局域网（LAN）设置 在新的弹出窗可以看到 现在可以访问local了，local也可以把数据转发到server，但是现在还有一个问题。server是直接把链接断掉，因为这个使用SOCKS5，server发现不是SOCKS5后，就丢弃了。local只是直接做了转发，需要浏览器直接设置为SOCKS5代理。 这个使用的是chrome，需要一个插件 下载插件SwitchyOmega 进入扩展程序，打开开发者模式，把下载的crx文件直接拖进去就可以直接安装了 进入SwitchyOmega界面， 新建模式，填写协议，ip：port 应用选项。 扩展功能在代码中，可见server.go 文件。在文件中，handleConn方法主要做转发处理。所以这里对handleConn方法，这修改就可以了。 输出日志我这里需要建立链接的日志，日志内容包括时间和源ip与目标ip。做一下修改就可以。 首先修改securetcp中struct 123456789101112type Addr interface &#123; Network() string // name of the network (for example, "tcp", "udp") String() string // string form of address (for example, "192.0.2.1:25", "[2001:db8::1]:80")&#125;// 加密传输的 TCP Sockettype SecureTCPConn struct &#123; io.ReadWriteCloser Address Addr Cipher *cipher&#125;` 然后在这里输出local-&gt;server日志即可 123456789101112 // 进行转发 // 从 localUser 读取数据发送到 dstServer go func() &#123; err := localConn.DecodeCopy(dstServer) log.Println(time.Now(),"目标地址：", dstServer.RemoteAddr(),"源地址：", localConn.Address) // 增加 if err != nil &#123; // 在 copy 的过程中可能会存在网络超时等 error 被 return，只要有一个发生了错误就退出本次工作 localConn.Close() dstServer.Close() &#125; &#125;()` server -&gt; local 日志 需要做以下修改 12345(&amp;SecureTCPConn&#123; Cipher: localConn.Cipher, Address: dstServer.RemoteAddr(), ReadWriteCloser: dstServer, &#125;).EncodeCopyServer(localConn) // 把EncodeCopy改为EncodeCopyServer方法 在securetcp创建EncodeCopyServer方法 1234func (secureSocket *SecureTCPConn) EncodeCopyServer(dst *SecureTCPConn) error &#123; log.Println(time.Now(),"目标地址：", dst.Address,"源地址：", secureSocket.Address) return secureSocket.EncodeCopy(dst)&#125; 现在运行，可以看到有日志的输出。 修改后代码可见github]]></content>
+    </entry>
+
+    
+    <entry>
       <title><![CDATA[NAT一探究竟]]></title>
       <url>%2F04%2F10%2FNAT%E4%B8%80%E6%8E%A2%E7%A9%B6%E7%AB%9F%2F</url>
       <content type="text"><![CDATA[前言一直好奇socket在内网情况下，是如何和外网链接的。如果都是私有ip还好理解，可以相互通信。但是公有ip都可以用，数据是怎么返回就成了一个迷。 由于最近需要抓取内网与外网交换的数据包，涉及到了内网ip与外网ip的转化，之前用的代理软件把ip给隐藏掉了，看不到是谁发过来的信息。需要自己编写一个代理软件，涉及到socket，顺便把NAT也探究一下。 NAT基本原理及应用标题是外部链接 P2P，UDP和TCP穿透NAT标题是外部链接 搭建NAT服务器先记下，等有了两个网卡，在尝试。 Linux服务器 Win服务器]]></content>
