@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://zsdf.shop/"/>
-  <updated>2019-04-26T00:52:02.142Z</updated>
+  <updated>2019-04-26T00:59:07.787Z</updated>
   <id>http://zsdf.shop/</id>
   
   <author>
@@ -14,6 +14,20 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>log4go使用</title>
+    <link href="http://zsdf.shop/04/26/log4go%E4%BD%BF%E7%94%A8/"/>
+    <id>http://zsdf.shop/04/26/log4go使用/</id>
+    <published>2019-04-26T00:59:07.000Z</published>
+    <updated>2019-04-26T00:59:07.787Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>图像分割学习总结</title>
@@ -260,9 +274,9 @@
       <category term="计算机网络" scheme="http://zsdf.shop/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="代理" scheme="http://zsdf.shop/tags/%E4%BB%A3%E7%90%86/"/>
-    
       <category term="go" scheme="http://zsdf.shop/tags/go/"/>
+    
+      <category term="代理" scheme="http://zsdf.shop/tags/%E4%BB%A3%E7%90%86/"/>
     
   </entry>
   
@@ -329,17 +343,17 @@
       <category term="计算机网络" scheme="http://zsdf.shop/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     
     
+      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
+    
       <category term="socket" scheme="http://zsdf.shop/tags/socket/"/>
     
-      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
+      <category term="python" scheme="http://zsdf.shop/tags/python/"/>
     
       <category term="网络" scheme="http://zsdf.shop/tags/%E7%BD%91%E7%BB%9C/"/>
     
       <category term="http" scheme="http://zsdf.shop/tags/http/"/>
     
       <category term="tcp" scheme="http://zsdf.shop/tags/tcp/"/>
-    
-      <category term="python" scheme="http://zsdf.shop/tags/python/"/>
     
   </entry>
   
