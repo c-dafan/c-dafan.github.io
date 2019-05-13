@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://zsdf.shop/"/>
-  <updated>2019-04-27T15:24:13.899Z</updated>
+  <updated>2019-05-13T00:22:58.713Z</updated>
   <id>http://zsdf.shop/</id>
   
   <author>
@@ -14,6 +14,121 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>easy_install--打脸python爱好者</title>
+    <link href="http://zsdf.shop/05/13/easy-install/"/>
+    <id>http://zsdf.shop/05/13/easy-install/</id>
+    <published>2019-05-12T23:59:23.000Z</published>
+    <updated>2019-05-13T00:22:58.713Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="easy-install的使用"><a href="#easy-install的使用" class="headerlink" title="easy_install的使用"></a>easy_install的使用</h3><p>作为python爱好者，竟然不知道有easy_install 的存在，简直是打脸。习惯使用pip或者conda，从来没注意过easy_install的存在。</p>
+<p>可能大家都遇到过一个同样的问题，pip更新失败。这是一个非常让人恶心的问题，曾一度因为pip更新失败重装python环境。</p>
+<p>有easy_install 再也不用担心pip更新失败的问题了。</p>
+<p>easy_install的使用：</p>
+<blockquote>
+<p>安装包</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">easy_install pip(包名)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>更新包</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">easy_install -U pip(包名)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>指定版本</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">easy_install pip=1.19(=版本号)</div></pre></td></tr></table></figure>
+<h3 id="pip更新失败，解决方案"><a href="#pip更新失败，解决方案" class="headerlink" title="pip更新失败，解决方案"></a>pip更新失败，解决方案</h3><blockquote>
+<p>easy_install</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">easy_install -U pip</div></pre></td></tr></table></figure>
+<blockquote>
+<p>conda</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">conda update pip</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;easy-install的使用&quot;&gt;&lt;a href=&quot;#easy-install的使用&quot; class=&quot;headerlink&quot; title=&quot;easy_install的使用&quot;&gt;&lt;/a&gt;easy_install的使用&lt;/h3&gt;&lt;p&gt;作为python爱好者，竟然不知道有
+    
+    </summary>
+    
+      <category term="python" scheme="http://zsdf.shop/categories/python/"/>
+    
+    
+      <category term="python" scheme="http://zsdf.shop/tags/python/"/>
+    
+      <category term="模块管理， pip" scheme="http://zsdf.shop/tags/%E6%A8%A1%E5%9D%97%E7%AE%A1%E7%90%86%EF%BC%8C-pip/"/>
+    
+      <category term="conda" scheme="http://zsdf.shop/tags/conda/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ocrDeepLearn</title>
+    <link href="http://zsdf.shop/05/09/ocrDeepLearn/"/>
+    <id>http://zsdf.shop/05/09/ocrDeepLearn/</id>
+    <published>2019-05-09T13:05:35.000Z</published>
+    <updated>2019-05-09T13:31:15.568Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="相关论文"><a href="#相关论文" class="headerlink" title="相关论文"></a>相关论文</h2><p><a href="">TextBoxes:A Fast Text Detector with a Single Deep Neural Network</a></p>
+<p><a href="">Detecting Oriented Text in Natural Images by Linking Segments</a></p>
+<p><a href="">EAST: An Efficient and Accurate Scene Text Detector</a></p>
+<p><a href="">PixelLink: Detecting Scene Text via Instance Segmentation</a></p>
+<p><a href="">Gated Recurrent Convolution Neural Network forOCR</a></p>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p><a href="">ICDAR 2011</a></p>
+<p><a href="">ICDAR 2013</a></p>
+<p><a href="">ICDAR 2015 Incidental Text</a></p>
+<p><a href="">Street View Text</a></p>
+<p><a href="">SynthText</a></p>
+<p><a href="">MSRA-TD500</a></p>
+<p><a href="">COCO-Text </a></p>
+<p><a href="">IIIT5K</a></p>
+<p>## </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;相关论文&quot;&gt;&lt;a href=&quot;#相关论文&quot; class=&quot;headerlink&quot; title=&quot;相关论文&quot;&gt;&lt;/a&gt;相关论文&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;&quot;&gt;TextBoxes:A Fast Text Detector with a Single Deep N
+    
+    </summary>
+    
+      <category term="deeplearn" scheme="http://zsdf.shop/categories/deeplearn/"/>
+    
+    
+      <category term="deeplearn" scheme="http://zsdf.shop/tags/deeplearn/"/>
+    
+      <category term="ocr" scheme="http://zsdf.shop/tags/ocr/"/>
+    
+      <category term="笔记" scheme="http://zsdf.shop/tags/%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>goTrick</title>
+    <link href="http://zsdf.shop/05/08/goTrick/"/>
+    <id>http://zsdf.shop/05/08/goTrick/</id>
+    <published>2019-05-08T13:19:19.000Z</published>
+    <updated>2019-05-08T13:20:12.909Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="编译后台执行程序"><a href="#编译后台执行程序" class="headerlink" title="编译后台执行程序"></a>编译后台执行程序</h2><p>go build -ldflags “-H=windowsgui”    example.go</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;编译后台执行程序&quot;&gt;&lt;a href=&quot;#编译后台执行程序&quot; class=&quot;headerlink&quot; title=&quot;编译后台执行程序&quot;&gt;&lt;/a&gt;编译后台执行程序&lt;/h2&gt;&lt;p&gt;go build -ldflags “-H=windowsgui”    example.g
+    
+    </summary>
+    
+      <category term="go" scheme="http://zsdf.shop/categories/go/"/>
+    
+    
+      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
+    
+      <category term="trick" scheme="http://zsdf.shop/tags/trick/"/>
+    
+  </entry>
   
   <entry>
     <title>log4go用户指导</title>
@@ -229,7 +344,7 @@
     <link href="http://zsdf.shop/04/13/conda%E5%A4%A7%E5%9D%91/"/>
     <id>http://zsdf.shop/04/13/conda大坑/</id>
     <published>2019-04-13T05:29:41.000Z</published>
-    <updated>2019-04-13T05:54:40.644Z</updated>
+    <updated>2019-05-13T00:01:17.173Z</updated>
     
     <content type="html"><![CDATA[<hr>
 <p>记录一个遇到的坑。是非常的坑的坑。 –conda的使用</p>
@@ -271,6 +386,8 @@
       <category term="奇坑" scheme="http://zsdf.shop/tags/%E5%A5%87%E5%9D%91/"/>
     
       <category term="pip" scheme="http://zsdf.shop/tags/pip/"/>
+    
+      <category term="模块管理" scheme="http://zsdf.shop/tags/%E6%A8%A1%E5%9D%97%E7%AE%A1%E7%90%86/"/>
     
   </entry>
   
@@ -402,9 +519,9 @@
       <category term="计算机网络" scheme="http://zsdf.shop/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
-    
       <category term="python" scheme="http://zsdf.shop/tags/python/"/>
+    
+      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
     
       <category term="socket" scheme="http://zsdf.shop/tags/socket/"/>
     

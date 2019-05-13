@@ -3,6 +3,27 @@
   
     
     <entry>
+      <title><![CDATA[easy_install--打脸python爱好者]]></title>
+      <url>%2F05%2F13%2Feasy-install%2F</url>
+      <content type="text"><![CDATA[easy_install的使用作为python爱好者，竟然不知道有easy_install 的存在，简直是打脸。习惯使用pip或者conda，从来没注意过easy_install的存在。 可能大家都遇到过一个同样的问题，pip更新失败。这是一个非常让人恶心的问题，曾一度因为pip更新失败重装python环境。 有easy_install 再也不用担心pip更新失败的问题了。 easy_install的使用： 安装包 1easy_install pip(包名) 更新包 1easy_install -U pip(包名) 指定版本 1easy_install pip=1.19(=版本号) pip更新失败，解决方案 easy_install 1easy_install -U pip conda 1conda update pip]]></content>
+    </entry>
+
+    
+    <entry>
+      <title><![CDATA[ocrDeepLearn]]></title>
+      <url>%2F05%2F09%2FocrDeepLearn%2F</url>
+      <content type="text"><![CDATA[相关论文TextBoxes:A Fast Text Detector with a Single Deep Neural Network Detecting Oriented Text in Natural Images by Linking Segments EAST: An Efficient and Accurate Scene Text Detector PixelLink: Detecting Scene Text via Instance Segmentation Gated Recurrent Convolution Neural Network forOCR 数据集ICDAR 2011 ICDAR 2013 ICDAR 2015 Incidental Text Street View Text SynthText MSRA-TD500 COCO-Text IIIT5K ##]]></content>
+    </entry>
+
+    
+    <entry>
+      <title><![CDATA[goTrick]]></title>
+      <url>%2F05%2F08%2FgoTrick%2F</url>
+      <content type="text"><![CDATA[编译后台执行程序go build -ldflags “-H=windowsgui” example.go]]></content>
+    </entry>
+
+    
+    <entry>
       <title><![CDATA[log4go用户指导]]></title>
       <url>%2F04%2F26%2Flog4go%E7%94%A8%E6%88%B7%E6%8C%87%E5%AF%BC%2F</url>
       <content type="text"><![CDATA[quick start获取1go get github.com/c-dafan/log4go 导入1import l4g "github.com/c-dafan/log4go" 获取logger全局 logger12l4g.Info("hello world")defer l4g.Close() 新建默认logger NewDefaultLogger123log := l4g.NewDefaultLogger(l4g.INFO)log.Info("hello world")defer log.Close() 新建logger l4g.Logger1234log := make(l4g.Logger)defer log.Close()log.AddFilter("stdout", l4g.DEBUG, l4g.NewConsoleLogWriter())log.Info("hello world") 添加过滤器1234log := make(l4g.Logger)defer log.Close()log.AddFilter("stdout", l4g.DEBUG, l4g.NewConsoleLogWriter())log.Info("hello world") 通过AddFilter函数添加过滤器，AddFilter(name, level, writer)第一个参数： 过滤器名字，随意， 只要不重复就行第二个参数： 日志级别第三个参数： 输出器 输出日志12345678l4g.Finest()l4g.Fine()l4g.Debug()l4g.Trace()l4g.Info()l4g.Warning()l4g.Error()l4g.Critical() 对应于不同级别 user guide日志级别12345678FINESTFINEDEBUGTRACEINFOWARNINGERRORCRITICAL writer输出到控制台的writer1234log := make(l4g.Logger)defer log.Close()log.AddFilter("stdout", l4g.DEBUG, l4g.NewConsoleLogWriter())log.Info("hello world") 输出到文件的writer1234567891011121314151617181920log := make(l4g.Logger)flw := l4g.NewFileLogWriter(filename, false)// %T - Time (15:04:05 MST)// %t - Time (15:04)// %D - Date (2006/01/02)// %d - Date (01/02/06)// %L - Level (FNST, FINE, DEBG, TRAC, WARN, EROR, CRIT)// %S - Source// %M - Message// It ignores unknown format strings (and removes them)// Recommended: "[%D %T] [%L] (%S) %M"flw.SetFormat("[%D %T] [%L] (%S) %M")flw.SetRotate(false)flw.SetRotateSize(0)flw.SetRotateLines(0)flw.SetRotateDaily(false)flw.SetRotateMaxBackup(999)log.AddFilter("file", l4g.FINE, flw) NewFileLogWriter(filename string, rotate bool) 日志文件名字，是否多文件 SetFormat(format string) 设置输出格式 flw.SetHeadFoot(head string, foot string) 日志头和脚 SetRotate(rotate bool) 设置是否多文件，需要和NewFileLogWriter一致 SetRotateSize(maxsize int) 设置一个文件大小， 0不限制 SetRotateLines(maxlines int) 设置一个文件多少行， 0不限制 SetRotateDaily(daily bool) 每天一个日志文件 SetRotateMaxBackup(maxbackup int) 默认999， 最多多少个日志文件 配置文件配置文件编写12345678910111213141516171819202122232425262728293031&lt;logging&gt; &lt;filter enabled="true"&gt; &lt;tag&gt;stdout&lt;/tag&gt; &lt;type&gt;console&lt;/type&gt; &lt;!-- level is (:?FINEST|FINE|DEBUG|TRACE|INFO|WARNING|ERROR) --&gt; &lt;level&gt;DEBUG&lt;/level&gt; &lt;/filter&gt; &lt;filter enabled="true"&gt; &lt;tag&gt;file&lt;/tag&gt; &lt;type&gt;file&lt;/type&gt; &lt;level&gt;FINEST&lt;/level&gt; &lt;property name="filename"&gt;test&#123;&#125;.log&lt;/property&gt; &lt;!-- %T - Time (15:04:05 MST) %t - Time (15:04) %D - Date (2006/01/02) %d - Date (01/02/06) %L - Level (FNST, FINE, DEBG, TRAC, WARN, EROR, CRIT) %S - Source %M - Message It ignores unknown format strings (and removes them) Recommended: "[%D %T] [%L] (%S) %M" --&gt; &lt;property name="format"&gt;[%D %T] [%L] (%S) %M&lt;/property&gt; &lt;property name="rotate"&gt;false&lt;/property&gt; &lt;!-- true enables log rotation, otherwise append --&gt; &lt;property name="maxsize"&gt;0M&lt;/property&gt; &lt;!-- \d+[KMG]? Suffixes are in terms of 2**10 --&gt; &lt;property name="maxlines"&gt;0K&lt;/property&gt; &lt;!-- \d+[KMG]? Suffixes are in terms of thousands --&gt; &lt;property name="maxbackup"&gt;999&lt;/property&gt; &lt;property name="daily"&gt;true&lt;/property&gt; &lt;!-- Automatically rotates when a log message is written after midnight --&gt; &lt;/filter&gt;&lt;/logging&gt; example.json 配置文件导入XMLConfigurationExample.go JsonConfigExample.go issue日志输出用的是go线程，一旦主线程结束，go线程也会跟着结束，所以go线程中没有运行完的，会直接停止。这个样子]]></content>
