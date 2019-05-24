@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://zsdf.shop/"/>
-  <updated>2019-05-13T00:22:58.713Z</updated>
+  <updated>2019-05-15T02:17:40.667Z</updated>
   <id>http://zsdf.shop/</id>
   
   <author>
@@ -14,6 +14,74 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>训练技巧总结</title>
+    <link href="http://zsdf.shop/05/15/train-trick/"/>
+    <id>http://zsdf.shop/05/15/train-trick/</id>
+    <published>2019-05-15T02:05:19.000Z</published>
+    <updated>2019-05-15T02:17:40.667Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h2><ul>
+<li>数据归一化。</li>
+<li>随机乱序，在最后抖动的时候，会很稳定</li>
+<li>数据增强器，对于数据少的情况，尤为重要。 <a href="baidu.com">图像数据增强器的使用</a></li>
+</ul>
+<h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><ul>
+<li>加Batch Normalization, 加Batch Normalization很管用，尤其是数据没有归一化的时候。</li>
+</ul>
+<h2 id="优化函数"><a href="#优化函数" class="headerlink" title="优化函数"></a>优化函数</h2><ul>
+<li>优化函数，学习率。会影响一点</li>
+<li>adam 好用简单，但是优化到后面就优化步长太小了</li>
+<li>sgd 大佬专用，很多论文中，建议用sgd，但是对于我（小白），会出现loss不下降情况</li>
+<li>学习率lr 衰减策略</li>
+</ul>
+<p><a href="https://blog.csdn.net/jiachen0212/article/details/80086926" target="_blank" rel="external">优化函数总结</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;数据处理&quot;&gt;&lt;a href=&quot;#数据处理&quot; class=&quot;headerlink&quot; title=&quot;数据处理&quot;&gt;&lt;/a&gt;数据处理&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;数据归一化。&lt;/li&gt;
+&lt;li&gt;随机乱序，在最后抖动的时候，会很稳定&lt;/li&gt;
+&lt;li&gt;数据增强器，对于数据少的
+    
+    </summary>
+    
+      <category term="deeplearn" scheme="http://zsdf.shop/categories/deeplearn/"/>
+    
+    
+      <category term="deeplearn" scheme="http://zsdf.shop/tags/deeplearn/"/>
+    
+      <category term="trick" scheme="http://zsdf.shop/tags/trick/"/>
+    
+      <category term="train" scheme="http://zsdf.shop/tags/train/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ImageDataGenerator</title>
+    <link href="http://zsdf.shop/05/15/ImageDataGenerator/"/>
+    <id>http://zsdf.shop/05/15/ImageDataGenerator/</id>
+    <published>2019-05-15T02:03:53.000Z</published>
+    <updated>2019-05-15T02:20:06.421Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="keras官方文档"><a href="#keras官方文档" class="headerlink" title="keras官方文档"></a><a href="https://keras.io/zh/preprocessing/image/" target="_blank" rel="external">keras官方文档</a></h2><h2 id="使用技巧"><a href="#使用技巧" class="headerlink" title="使用技巧"></a>使用技巧</h2>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;keras官方文档&quot;&gt;&lt;a href=&quot;#keras官方文档&quot; class=&quot;headerlink&quot; title=&quot;keras官方文档&quot;&gt;&lt;/a&gt;&lt;a href=&quot;https://keras.io/zh/preprocessing/image/&quot; target=&quot;
+    
+    </summary>
+    
+      <category term="deeplearn" scheme="http://zsdf.shop/categories/deeplearn/"/>
+    
+    
+      <category term="deeplearn" scheme="http://zsdf.shop/tags/deeplearn/"/>
+    
+      <category term="keras" scheme="http://zsdf.shop/tags/keras/"/>
+    
+  </entry>
   
   <entry>
     <title>easy_install--打脸python爱好者</title>
@@ -519,9 +587,9 @@
       <category term="计算机网络" scheme="http://zsdf.shop/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="python" scheme="http://zsdf.shop/tags/python/"/>
-    
       <category term="go" scheme="http://zsdf.shop/tags/go/"/>
+    
+      <category term="python" scheme="http://zsdf.shop/tags/python/"/>
     
       <category term="socket" scheme="http://zsdf.shop/tags/socket/"/>
     
