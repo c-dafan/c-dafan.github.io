@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://zsdf.shop/"/>
-  <updated>2019-05-15T02:17:40.667Z</updated>
+  <updated>2019-06-03T06:05:56.631Z</updated>
   <id>http://zsdf.shop/</id>
   
   <author>
@@ -16,25 +16,126 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>leecode24</title>
+    <link href="http://zsdf.shop/06/03/leecode24/"/>
+    <id>http://zsdf.shop/06/03/leecode24/</id>
+    <published>2019-06-03T06:03:23.000Z</published>
+    <updated>2019-06-03T06:05:56.631Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/uploads/leecode24.PNG" alt="题目"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">class Solution:</div><div class="line">    def swapPairs(self, head: ListNode) -&gt; ListNode:</div><div class="line">        </div><div class="line">        newhead = ListNode(0)</div><div class="line">        </div><div class="line">        newhead.next = head</div><div class="line">        </div><div class="line">        l1 = newhead</div><div class="line">        if l1.next is None:</div><div class="line">            return head</div><div class="line">        l2 = newhead.next.next</div><div class="line">        if l2 is None:</div><div class="line">            return head</div><div class="line">        while True:</div><div class="line">            tmp = l1.next</div><div class="line">            l1.next = l2</div><div class="line">            tmp.next = l2.next</div><div class="line">            l2.next = tmp</div><div class="line">            l1 = tmp</div><div class="line">            if l1.next is None:</div><div class="line">                break</div><div class="line">            l2 = l1.next.next</div><div class="line">            try:</div><div class="line">                l2.next</div><div class="line">            except:</div><div class="line">                break</div><div class="line">        </div><div class="line">        return newhead.next</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;/uploads/leecode24.PNG&quot; alt=&quot;题目&quot;&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/d
+    
+    </summary>
+    
+      <category term="leecode" scheme="http://zsdf.shop/categories/leecode/"/>
+    
+    
+      <category term="leecode" scheme="http://zsdf.shop/tags/leecode/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>leecode718</title>
+    <link href="http://zsdf.shop/06/03/leecode718/"/>
+    <id>http://zsdf.shop/06/03/leecode718/</id>
+    <published>2019-06-03T05:55:58.000Z</published>
+    <updated>2019-06-03T06:04:25.187Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/uploads/leecode718.PNG" alt="题目"></p>
+<p>比较简单的动态规划，自己能找到状态转换关系的第一道动态规划题</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findLength</span><span class="params">(self, A: List[int], B: List[int])</span> -&gt; int:</span></div><div class="line">        a_len = len(A)</div><div class="line">        b_len = len(B)</div><div class="line">        dp = [[<span class="number">0</span>] * a_len <span class="keyword">for</span> _ <span class="keyword">in</span> range(b_len)]</div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(a_len):</div><div class="line">            <span class="keyword">if</span> A[i] == B[<span class="number">0</span>]:</div><div class="line">                dp[<span class="number">0</span>][i] = <span class="number">1</span></div><div class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(b_len):</div><div class="line">            <span class="keyword">if</span> B[j] == A[<span class="number">0</span>]:</div><div class="line">                dp[j][<span class="number">0</span>] = <span class="number">1</span></div><div class="line">        </div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, b_len):</div><div class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, a_len):</div><div class="line">                <span class="keyword">if</span> A[j] == B[i]:</div><div class="line">                    dp[i][j] = dp[i<span class="number">-1</span>][j<span class="number">-1</span>] + <span class="number">1</span></div><div class="line">        </div><div class="line">        <span class="keyword">return</span> max([max(x) <span class="keyword">for</span> x <span class="keyword">in</span> dp])</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;/uploads/leecode718.PNG&quot; alt=&quot;题目&quot;&gt;&lt;/p&gt;
+&lt;p&gt;比较简单的动态规划，自己能找到状态转换关系的第一道动态规划题&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td cl
+    
+    </summary>
+    
+      <category term="leecode" scheme="http://zsdf.shop/categories/leecode/"/>
+    
+    
+      <category term="leecode" scheme="http://zsdf.shop/tags/leecode/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>python_tqdm</title>
+    <link href="http://zsdf.shop/05/27/python-tqdm/"/>
+    <id>http://zsdf.shop/05/27/python-tqdm/</id>
+    <published>2019-05-27T07:28:33.000Z</published>
+    <updated>2019-06-03T06:17:21.050Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="进度条"><a href="#进度条" class="headerlink" title="进度条"></a>进度条</h2><h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p><a href="https://www.jianshu.com/p/21cf48be6bf6" target="_blank" rel="external">https://www.jianshu.com/p/21cf48be6bf6</a></p>
+<p><a href="https://blog.csdn.net/zkp_987/article/details/81748098" target="_blank" rel="external">https://blog.csdn.net/zkp_987/article/details/81748098</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;进度条&quot;&gt;&lt;a href=&quot;#进度条&quot; class=&quot;headerlink&quot; title=&quot;进度条&quot;&gt;&lt;/a&gt;进度条&lt;/h2&gt;&lt;h2 id=&quot;使用&quot;&gt;&lt;a href=&quot;#使用&quot; class=&quot;headerlink&quot; title=&quot;使用&quot;&gt;&lt;/a&gt;使用&lt;/h2&gt;&lt;p
+    
+    </summary>
+    
+      <category term="python" scheme="http://zsdf.shop/categories/python/"/>
+    
+    
+      <category term="python" scheme="http://zsdf.shop/tags/python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>leecode/math50</title>
+    <link href="http://zsdf.shop/05/24/leecode-math50/"/>
+    <id>http://zsdf.shop/05/24/leecode-math50/</id>
+    <published>2019-05-24T02:55:52.000Z</published>
+    <updated>2019-05-24T03:07:10.331Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/uploads/leecode50.png" alt="题"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">myPow</span><span class="params">(self, x: float, n: int)</span> -&gt; float:</span></div><div class="line">        <span class="keyword">if</span> n == <span class="number">0</span>:</div><div class="line">            <span class="keyword">return</span> <span class="number">1</span></div><div class="line">        <span class="keyword">if</span> n &gt; <span class="number">0</span>:</div><div class="line">            <span class="keyword">return</span> self.core_func(x, n)</div><div class="line">        <span class="keyword">if</span> n &lt; <span class="number">0</span>:</div><div class="line">            <span class="keyword">return</span> <span class="number">1</span> / self.core_func(x, -n)</div><div class="line">        </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">core_func</span><span class="params">(self, x, n)</span>:</span></div><div class="line">        <span class="keyword">if</span> n == <span class="number">1</span>:</div><div class="line">            <span class="keyword">return</span> x</div><div class="line">        <span class="keyword">if</span> n % <span class="number">2</span> == <span class="number">0</span>:</div><div class="line">            a = self.myPow(x, n//<span class="number">2</span>)</div><div class="line">            <span class="keyword">return</span> a*a</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            a = self.myPow(x, n //<span class="number">2</span>)</div><div class="line">            <span class="keyword">return</span> a * a * x</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;/uploads/leecode50.png&quot; alt=&quot;题&quot;&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/d
+    
+    </summary>
+    
+      <category term="leecode" scheme="http://zsdf.shop/categories/leecode/"/>
+    
+    
+      <category term="leecode" scheme="http://zsdf.shop/tags/leecode/"/>
+    
+  </entry>
+  
+  <entry>
     <title>训练技巧总结</title>
-    <link href="http://zsdf.shop/05/15/train-trick/"/>
-    <id>http://zsdf.shop/05/15/train-trick/</id>
+    <link href="http://zsdf.shop/05/15/dl_train-trick/"/>
+    <id>http://zsdf.shop/05/15/dl_train-trick/</id>
     <published>2019-05-15T02:05:19.000Z</published>
-    <updated>2019-05-15T02:17:40.667Z</updated>
+    <updated>2019-06-03T06:14:16.708Z</updated>
     
     <content type="html"><![CDATA[<h2 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h2><ul>
 <li>数据归一化。</li>
 <li>随机乱序，在最后抖动的时候，会很稳定</li>
-<li>数据增强器，对于数据少的情况，尤为重要。 <a href="baidu.com">图像数据增强器的使用</a></li>
+<li>数据增强器，对于数据少的情况，尤为重要。 <a href="/05/15/dl_ImageDataGenerator">图像数据增强器的使用</a></li>
 </ul>
 <h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><ul>
 <li>加Batch Normalization, 加Batch Normalization很管用，尤其是数据没有归一化的时候。</li>
+<li>dropout一定程度可以防止过拟合</li>
 </ul>
 <h2 id="优化函数"><a href="#优化函数" class="headerlink" title="优化函数"></a>优化函数</h2><ul>
 <li>优化函数，学习率。会影响一点</li>
 <li>adam 好用简单，但是优化到后面就优化步长太小了</li>
 <li>sgd 大佬专用，很多论文中，建议用sgd，但是对于我（小白），会出现loss不下降情况</li>
 <li>学习率lr 衰减策略</li>
+<li>学习率小一点，学习慢一点</li>
 </ul>
 <p><a href="https://blog.csdn.net/jiachen0212/article/details/80086926" target="_blank" rel="external">优化函数总结</a></p>
 ]]></content>
@@ -61,8 +162,8 @@
   
   <entry>
     <title>ImageDataGenerator</title>
-    <link href="http://zsdf.shop/05/15/ImageDataGenerator/"/>
-    <id>http://zsdf.shop/05/15/ImageDataGenerator/</id>
+    <link href="http://zsdf.shop/05/15/dl_ImageDataGenerator/"/>
+    <id>http://zsdf.shop/05/15/dl_ImageDataGenerator/</id>
     <published>2019-05-15T02:03:53.000Z</published>
     <updated>2019-05-15T02:20:06.421Z</updated>
     
@@ -85,8 +186,8 @@
   
   <entry>
     <title>easy_install--打脸python爱好者</title>
-    <link href="http://zsdf.shop/05/13/easy-install/"/>
-    <id>http://zsdf.shop/05/13/easy-install/</id>
+    <link href="http://zsdf.shop/05/13/python_easy-install/"/>
+    <id>http://zsdf.shop/05/13/python_easy-install/</id>
     <published>2019-05-12T23:59:23.000Z</published>
     <updated>2019-05-13T00:22:58.713Z</updated>
     
@@ -127,20 +228,21 @@
     
       <category term="python" scheme="http://zsdf.shop/tags/python/"/>
     
-      <category term="模块管理， pip" scheme="http://zsdf.shop/tags/%E6%A8%A1%E5%9D%97%E7%AE%A1%E7%90%86%EF%BC%8C-pip/"/>
-    
       <category term="conda" scheme="http://zsdf.shop/tags/conda/"/>
+    
+      <category term="模块管理， pip" scheme="http://zsdf.shop/tags/%E6%A8%A1%E5%9D%97%E7%AE%A1%E7%90%86%EF%BC%8C-pip/"/>
     
   </entry>
   
   <entry>
     <title>ocrDeepLearn</title>
-    <link href="http://zsdf.shop/05/09/ocrDeepLearn/"/>
-    <id>http://zsdf.shop/05/09/ocrDeepLearn/</id>
+    <link href="http://zsdf.shop/05/09/dl_ocrDeepLearn/"/>
+    <id>http://zsdf.shop/05/09/dl_ocrDeepLearn/</id>
     <published>2019-05-09T13:05:35.000Z</published>
-    <updated>2019-05-09T13:31:15.568Z</updated>
+    <updated>2019-06-03T06:10:14.949Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="相关论文"><a href="#相关论文" class="headerlink" title="相关论文"></a>相关论文</h2><p><a href="">TextBoxes:A Fast Text Detector with a Single Deep Neural Network</a></p>
+    <content type="html"><![CDATA[<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p><a href="https://github.com/c-dafan/CharRecognition" target="_blank" rel="external">crnn</a></p>
+<h2 id="相关论文"><a href="#相关论文" class="headerlink" title="相关论文"></a>相关论文</h2><p><a href="">TextBoxes:A Fast Text Detector with a Single Deep Neural Network</a></p>
 <p><a href="">Detecting Oriented Text in Natural Images by Linking Segments</a></p>
 <p><a href="">EAST: An Efficient and Accurate Scene Text Detector</a></p>
 <p><a href="">PixelLink: Detecting Scene Text via Instance Segmentation</a></p>
@@ -153,12 +255,12 @@
 <p><a href="">MSRA-TD500</a></p>
 <p><a href="">COCO-Text </a></p>
 <p><a href="">IIIT5K</a></p>
-<p>## </p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.cnblogs.com/lillylin/p/6893500.html" target="_blank" rel="external">https://www.cnblogs.com/lillylin/p/6893500.html</a></p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;h2 id=&quot;相关论文&quot;&gt;&lt;a href=&quot;#相关论文&quot; class=&quot;headerlink&quot; title=&quot;相关论文&quot;&gt;&lt;/a&gt;相关论文&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;&quot;&gt;TextBoxes:A Fast Text Detector with a Single Deep N
+      &lt;h2 id=&quot;代码&quot;&gt;&lt;a href=&quot;#代码&quot; class=&quot;headerlink&quot; title=&quot;代码&quot;&gt;&lt;/a&gt;代码&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/c-dafan/CharRecognition&quot; target=&quot;_blank&quot; r
     
     </summary>
     
@@ -273,8 +375,8 @@
   
   <entry>
     <title>图像分割学习总结</title>
-    <link href="http://zsdf.shop/04/25/%E5%9B%BE%E5%83%8F%E5%88%86%E5%89%B2%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/"/>
-    <id>http://zsdf.shop/04/25/图像分割学习总结/</id>
+    <link href="http://zsdf.shop/04/25/dl_%E5%9B%BE%E5%83%8F%E5%88%86%E5%89%B2%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/"/>
+    <id>http://zsdf.shop/04/25/dl_图像分割学习总结/</id>
     <published>2019-04-25T13:01:07.000Z</published>
     <updated>2019-04-26T05:09:12.999Z</updated>
     
@@ -409,8 +511,8 @@
   
   <entry>
     <title>conda大坑</title>
-    <link href="http://zsdf.shop/04/13/conda%E5%A4%A7%E5%9D%91/"/>
-    <id>http://zsdf.shop/04/13/conda大坑/</id>
+    <link href="http://zsdf.shop/04/13/python_conda%E5%A4%A7%E5%9D%91/"/>
+    <id>http://zsdf.shop/04/13/python_conda大坑/</id>
     <published>2019-04-13T05:29:41.000Z</published>
     <updated>2019-05-13T00:01:17.173Z</updated>
     
@@ -461,8 +563,8 @@
   
   <entry>
     <title>Lightsocks环境配置</title>
-    <link href="http://zsdf.shop/04/12/Lightsocks%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
-    <id>http://zsdf.shop/04/12/Lightsocks环境配置/</id>
+    <link href="http://zsdf.shop/04/12/go_Lightsocks%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
+    <id>http://zsdf.shop/04/12/go_Lightsocks环境配置/</id>
     <published>2019-04-12T01:03:48.000Z</published>
     <updated>2019-04-12T03:55:55.306Z</updated>
     
@@ -589,9 +691,9 @@
     
       <category term="go" scheme="http://zsdf.shop/tags/go/"/>
     
-      <category term="python" scheme="http://zsdf.shop/tags/python/"/>
-    
       <category term="socket" scheme="http://zsdf.shop/tags/socket/"/>
+    
+      <category term="python" scheme="http://zsdf.shop/tags/python/"/>
     
       <category term="网络" scheme="http://zsdf.shop/tags/%E7%BD%91%E7%BB%9C/"/>
     
@@ -714,140 +816,6 @@
       <category term="java" scheme="http://zsdf.shop/tags/java/"/>
     
       <category term="redis" scheme="http://zsdf.shop/tags/redis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>shop_go_vue</title>
-    <link href="http://zsdf.shop/04/05/shop-go-vue/"/>
-    <id>http://zsdf.shop/04/05/shop-go-vue/</id>
-    <published>2019-04-05T02:44:58.000Z</published>
-    <updated>2019-04-06T04:42:53.095Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="一个购物网站总结"><a href="#一个购物网站总结" class="headerlink" title="一个购物网站总结"></a>一个购物网站总结</h1><p>一个购物网站，数据库设计如下：<br><img src="https://raw.githubusercontent.com/c-dafan/Shop_GoVueWeb/master/shop/static/shop.png" alt="数据库"></p>
-<p>前端nodejs + vue-cli + Vue + Element-UI</p>
-<h2 id="vue"><a href="#vue" class="headerlink" title="vue"></a>vue</h2><p>采用element-UI组件。记录一下体验：</p>
-<pre><code>vue整体体验很好，通过router和router-view可以很好的提高前端布局代码的复用性。对我这种不擅长写前端，每次写前端ctrl+c，ctrl+v的真的是非常的友好。另外，数据的绑定、一些指令也是相当的好用
-使用vue-cli工具，需要借助nodejs，可以实现前后端的分离。在vue-cli的工程上，目录结构很清晰，很容易写一个前端。不过需要一些nodejs的知识，不然学起来真的很难受。
-element-UI组件很好使用，不用懂很多css也能写出来很漂亮页面，有种纯写html最后得到带css效果的页面。
-</code></pre><p>笔记：</p>
-<blockquote>
-<p>父子组件通信</p>
-</blockquote>
-<ul>
-<li><p>v-model 数据双向绑定</p>
-</li>
-<li><p>v-on （@）事件</p>
-</li>
-<li><p>v-bind （:） 数据单向绑定</p>
-</li>
-</ul>
-<blockquote>
-<p>内置指令</p>
-</blockquote>
-<ul>
-<li><p>v-if、v-else、v-else-if 条件</p>
-</li>
-<li><p>v-for 循环 （o, i） in objs 其中i是索引，这个顺序好像和我见过的大部分语言相反</p>
-</li>
-</ul>
-<blockquote>
-<p>函数</p>
-</blockquote>
-<ul>
-<li><p>created</p>
-</li>
-<li><p>watch 一直观察这个变量</p>
-</li>
-<li><p>computed 一个变量通过函数结算出来</p>
-</li>
-</ul>
-<blockquote>
-<p>slot、props、scope</p>
-</blockquote>
-<ul>
-<li><p>slot 插槽</p>
-</li>
-<li><p>scope</p>
-</li>
-<li><p>props</p>
-</li>
-</ul>
-<h2 id="beego"><a href="#beego" class="headerlink" title="beego"></a>beego</h2><p>beego体验：</p>
-<pre><code>beego从入门到放弃，没有重新运行解决不了的问题，beego基于mvc三层的一个框架，只要学过其他语言的WEB，入手还是很容易的。
-学习go语言一天，入手beego，本着练习go语言的原则，写了这个项目。
-beego有个bee工具，使用起来很容易。bee generate 几乎直接把真的网站的代码都写完了，需要改一些逻辑。生成的controller中GetAll也太恨了，把整个数据库的信息可以按照任意条件都能查询到。
-</code></pre><p>项目中遇到的问题：</p>
-<pre><code>通过注释配url，这个不知道是我的问题，还是beego的问题。配好的url，第一次不起作用，需要把进程关了，然后重新运行。第一次运行会生成一个文件，但是进入url会404，第二次运行就没问题。
-beego的orm也很用，很简单的就能和数据库映射。查询外键中的对象很可以查询到，不过一旦用了外键，外键对应的就成为了一个结构体，在发post等请求时，传外键Id时，需要多写一个{}。
-</code></pre><p>beego笔记：</p>
-<blockquote>
-<p>bee</p>
-</blockquote>
-<pre><code>generate    生成代码
-new         创建
-pack        打包
-run         运行
-</code></pre><blockquote>
-<p>orm</p>
-</blockquote>
-<ul>
-<li><p>qs.RelatedSel() 加载外键</p>
-<pre><code>参数：要加载的外键名字，多层的话，可以使用__
-</code></pre></li>
-<li><p>qs.Limit(limit, offset)</p>
-</li>
-<li><p>struct</p>
-</li>
-</ul>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> Address <span class="keyword">struct</span> &#123;</div><div class="line">	Id             <span class="keyword">int</span>    <span class="string">`orm:"column(aid);auto"`</span></div><div class="line">	Uid            *User  <span class="string">`orm:"column(uid);null;rel(fk)"`</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// auto自增、</span></div><div class="line"><span class="comment">// null可以为空、默认为非空、</span></div><div class="line"><span class="comment">// auto_now_add;type(datetime) 自动放到当时时间</span></div><div class="line"><span class="comment">// auto_now;type(datetime) 自动放到当时时间</span></div><div class="line"><span class="comment">// 区别auto_now_add第一次添加的时间，更新时间不变，auto_now每次更新时间改变</span></div></pre></td></tr></table></figure>
-<blockquote>
-<p>Controller</p>
-</blockquote>
-<ul>
-<li><p>router</p>
-</li>
-<li><p>ServeJSON</p>
-</li>
-</ul>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;一个购物网站总结&quot;&gt;&lt;a href=&quot;#一个购物网站总结&quot; class=&quot;headerlink&quot; title=&quot;一个购物网站总结&quot;&gt;&lt;/a&gt;一个购物网站总结&lt;/h1&gt;&lt;p&gt;一个购物网站，数据库设计如下：&lt;br&gt;&lt;img src=&quot;https://raw.githu
-    
-    </summary>
-    
-      <category term="Web" scheme="http://zsdf.shop/categories/Web/"/>
-    
-    
-      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
-    
-      <category term="vue" scheme="http://zsdf.shop/tags/vue/"/>
-    
-      <category term="beego" scheme="http://zsdf.shop/tags/beego/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>hello world</title>
-    <link href="http://zsdf.shop/04/25/hello/"/>
-    <id>http://zsdf.shop/04/25/hello/</id>
-    <published>2017-04-25T11:12:19.000Z</published>
-    <updated>2019-04-06T02:45:07.782Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="博客笔记"><a href="#博客笔记" class="headerlink" title="博客笔记"></a>博客笔记</h1><hr>
-<p>自2017年搭建好，再也没用过，两年后的现在<br>重拾博客</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;博客笔记&quot;&gt;&lt;a href=&quot;#博客笔记&quot; class=&quot;headerlink&quot; title=&quot;博客笔记&quot;&gt;&lt;/a&gt;博客笔记&lt;/h1&gt;&lt;hr&gt;
-&lt;p&gt;自2017年搭建好，再也没用过，两年后的现在&lt;br&gt;重拾博客&lt;/p&gt;
-
-    
-    </summary>
-    
     
   </entry>
   

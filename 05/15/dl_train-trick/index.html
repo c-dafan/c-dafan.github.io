@@ -90,17 +90,17 @@
 
 
 
-<meta name="description" content="数据处理 数据归一化。 随机乱序，在最后抖动的时候，会很稳定 数据增强器，对于数据少的情况，尤为重要。 图像数据增强器的使用  模型 加Batch Normalization, 加Batch Normalization很管用，尤其是数据没有归一化的时候。  优化函数 优化函数，学习率。会影响一点 adam 好用简单，但是优化到后面就优化步长太小了 sgd 大佬专用，很多论文中，建议用sgd，但是对">
+<meta name="description" content="数据处理 数据归一化。 随机乱序，在最后抖动的时候，会很稳定 数据增强器，对于数据少的情况，尤为重要。 图像数据增强器的使用  模型 加Batch Normalization, 加Batch Normalization很管用，尤其是数据没有归一化的时候。 dropout一定程度可以防止过拟合  优化函数 优化函数，学习率。会影响一点 adam 好用简单，但是优化到后面就优化步长太小了 sgd 大佬">
 <meta name="keywords" content="deeplearn,trick,train">
 <meta property="og:type" content="article">
 <meta property="og:title" content="训练技巧总结">
-<meta property="og:url" content="http://zsdf.shop/05/15/train-trick/index.html">
+<meta property="og:url" content="http://zsdf.shop/05/15/dl_train-trick/index.html">
 <meta property="og:site_name" content="我的笔记">
-<meta property="og:description" content="数据处理 数据归一化。 随机乱序，在最后抖动的时候，会很稳定 数据增强器，对于数据少的情况，尤为重要。 图像数据增强器的使用  模型 加Batch Normalization, 加Batch Normalization很管用，尤其是数据没有归一化的时候。  优化函数 优化函数，学习率。会影响一点 adam 好用简单，但是优化到后面就优化步长太小了 sgd 大佬专用，很多论文中，建议用sgd，但是对">
-<meta property="og:updated_time" content="2019-05-15T02:17:40.667Z">
+<meta property="og:description" content="数据处理 数据归一化。 随机乱序，在最后抖动的时候，会很稳定 数据增强器，对于数据少的情况，尤为重要。 图像数据增强器的使用  模型 加Batch Normalization, 加Batch Normalization很管用，尤其是数据没有归一化的时候。 dropout一定程度可以防止过拟合  优化函数 优化函数，学习率。会影响一点 adam 好用简单，但是优化到后面就优化步长太小了 sgd 大佬">
+<meta property="og:updated_time" content="2019-06-03T06:14:16.708Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="训练技巧总结">
-<meta name="twitter:description" content="数据处理 数据归一化。 随机乱序，在最后抖动的时候，会很稳定 数据增强器，对于数据少的情况，尤为重要。 图像数据增强器的使用  模型 加Batch Normalization, 加Batch Normalization很管用，尤其是数据没有归一化的时候。  优化函数 优化函数，学习率。会影响一点 adam 好用简单，但是优化到后面就优化步长太小了 sgd 大佬专用，很多论文中，建议用sgd，但是对">
+<meta name="twitter:description" content="数据处理 数据归一化。 随机乱序，在最后抖动的时候，会很稳定 数据增强器，对于数据少的情况，尤为重要。 图像数据增强器的使用  模型 加Batch Normalization, 加Batch Normalization很管用，尤其是数据没有归一化的时候。 dropout一定程度可以防止过拟合  优化函数 优化函数，学习率。会影响一点 adam 好用简单，但是优化到后面就优化步长太小了 sgd 大佬">
 
 
 
@@ -261,7 +261,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://zsdf.shop/05/15/train-trick/">
+    <link itemprop="mainEntityOfPage" href="http://zsdf.shop/05/15/dl_train-trick/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="da fan">
@@ -351,7 +351,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  156
+                  179
                 </span>
               
 
@@ -388,16 +388,18 @@
         <h2 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h2><ul>
 <li>数据归一化。</li>
 <li>随机乱序，在最后抖动的时候，会很稳定</li>
-<li>数据增强器，对于数据少的情况，尤为重要。 <a href="baidu.com">图像数据增强器的使用</a></li>
+<li>数据增强器，对于数据少的情况，尤为重要。 <a href="/05/15/dl_ImageDataGenerator">图像数据增强器的使用</a></li>
 </ul>
 <h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><ul>
 <li>加Batch Normalization, 加Batch Normalization很管用，尤其是数据没有归一化的时候。</li>
+<li>dropout一定程度可以防止过拟合</li>
 </ul>
 <h2 id="优化函数"><a href="#优化函数" class="headerlink" title="优化函数"></a>优化函数</h2><ul>
 <li>优化函数，学习率。会影响一点</li>
 <li>adam 好用简单，但是优化到后面就优化步长太小了</li>
 <li>sgd 大佬专用，很多论文中，建议用sgd，但是对于我（小白），会出现loss不下降情况</li>
 <li>学习率lr 衰减策略</li>
+<li>学习率小一点，学习慢一点</li>
 </ul>
 <p><a href="https://blog.csdn.net/jiachen0212/article/details/80086926" target="_blank" rel="external">优化函数总结</a></p>
 
@@ -446,13 +448,17 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/05/24/leecode-math50/" rel="next" title="leecode/math50">
+                <i class="fa fa-chevron-left"></i> leecode/math50
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/05/15/ImageDataGenerator/" rel="prev" title="ImageDataGenerator">
+              <a href="/05/15/dl_ImageDataGenerator/" rel="prev" title="ImageDataGenerator">
                 ImageDataGenerator <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -526,7 +532,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -537,7 +543,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -548,7 +554,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">33</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -628,7 +634,7 @@
 </div>
 
 <div class="theme-info">
-  <span class="post-count">博客全站共6.4k字</span>
+  <span class="post-count">博客全站共6.7k字</span>
 </div>
 
 
