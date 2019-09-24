@@ -3,6 +3,13 @@
   
     
     <entry>
+      <title><![CDATA[git_tree]]></title>
+      <url>%2F09%2F24%2Fgit-tree%2F</url>
+      <content type="text"><![CDATA[DownGit链接：https://www.itsvse.com/downgit/ 现在有一个test仓库https://github.com/mygithub/test你要gitclone里面的tt子目录：在本地的硬盘位置打开Git Bash 12345678git init test &amp;&amp; cd test //新建仓库并进入文件夹git config core.sparsecheckout true //设置允许克隆子目录echo &apos;tt*&apos; &gt;&gt; .git/info/sparse-checkout //设置要克隆的仓库的子目录路径 //空格别漏git remote add origin git@github.com:mygithub/test.git //这里换成你要克隆的项目和库git pull origin master //下载]]></content>
+    </entry>
+
+    
+    <entry>
       <title><![CDATA[leecode24]]></title>
       <url>%2F06%2F03%2Fleecode24%2F</url>
       <content type="text"><![CDATA[1234567891011121314151617181920212223242526272829class Solution: def swapPairs(self, head: ListNode) -&gt; ListNode: newhead = ListNode(0) newhead.next = head l1 = newhead if l1.next is None: return head l2 = newhead.next.next if l2 is None: return head while True: tmp = l1.next l1.next = l2 tmp.next = l2.next l2.next = tmp l1 = tmp if l1.next is None: break l2 = l1.next.next try: l2.next except: break return newhead.next]]></content>

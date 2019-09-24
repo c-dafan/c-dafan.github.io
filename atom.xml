@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://zsdf.shop/"/>
-  <updated>2019-06-03T06:05:56.631Z</updated>
+  <updated>2019-09-24T10:13:07.725Z</updated>
   <id>http://zsdf.shop/</id>
   
   <author>
@@ -14,6 +14,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>git_tree</title>
+    <link href="http://zsdf.shop/09/24/git-tree/"/>
+    <id>http://zsdf.shop/09/24/git-tree/</id>
+    <published>2019-09-24T10:08:43.000Z</published>
+    <updated>2019-09-24T10:13:07.725Z</updated>
+    
+    <content type="html"><![CDATA[<p>DownGit链接：<a href="https://www.itsvse.com/downgit/" target="_blank" rel="external">https://www.itsvse.com/downgit/</a></p>
+<p>现在有一个test仓库<a href="https://github.com/mygithub/test" target="_blank" rel="external">https://github.com/mygithub/test</a><br>你要gitclone里面的tt子目录：<br>在本地的硬盘位置打开Git Bash</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">git init test &amp;&amp; cd test     //新建仓库并进入文件夹</div><div class="line">git config core.sparsecheckout true //设置允许克隆子目录</div><div class="line"></div><div class="line">echo &apos;tt*&apos; &gt;&gt; .git/info/sparse-checkout //设置要克隆的仓库的子目录路径   //空格别漏</div><div class="line"></div><div class="line">git remote add origin git@github.com:mygithub/test.git  //这里换成你要克隆的项目和库</div><div class="line"></div><div class="line">git pull origin master    //下载</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;DownGit链接：&lt;a href=&quot;https://www.itsvse.com/downgit/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://www.itsvse.com/downgit/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;现在有一个test仓库
+    
+    </summary>
+    
+      <category term="git" scheme="http://zsdf.shop/categories/git/"/>
+    
+    
+      <category term="trick" scheme="http://zsdf.shop/tags/trick/"/>
+    
+      <category term="git" scheme="http://zsdf.shop/tags/git/"/>
+    
+  </entry>
   
   <entry>
     <title>leecode24</title>
@@ -228,9 +255,9 @@
     
       <category term="python" scheme="http://zsdf.shop/tags/python/"/>
     
-      <category term="conda" scheme="http://zsdf.shop/tags/conda/"/>
-    
       <category term="模块管理， pip" scheme="http://zsdf.shop/tags/%E6%A8%A1%E5%9D%97%E7%AE%A1%E7%90%86%EF%BC%8C-pip/"/>
+    
+      <category term="conda" scheme="http://zsdf.shop/tags/conda/"/>
     
   </entry>
   
@@ -620,9 +647,9 @@
       <category term="计算机网络" scheme="http://zsdf.shop/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
-    
       <category term="代理" scheme="http://zsdf.shop/tags/%E4%BB%A3%E7%90%86/"/>
+    
+      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
     
   </entry>
   
@@ -689,9 +716,9 @@
       <category term="计算机网络" scheme="http://zsdf.shop/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
-    
       <category term="socket" scheme="http://zsdf.shop/tags/socket/"/>
+    
+      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
     
       <category term="python" scheme="http://zsdf.shop/tags/python/"/>
     
@@ -780,42 +807,6 @@
       <category term="go" scheme="http://zsdf.shop/tags/go/"/>
     
       <category term="note" scheme="http://zsdf.shop/tags/note/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>面试准备</title>
-    <link href="http://zsdf.shop/04/07/%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/"/>
-    <id>http://zsdf.shop/04/07/面试准备/</id>
-    <published>2019-04-07T06:22:33.000Z</published>
-    <updated>2019-04-08T14:00:23.923Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="面试前准备"><a href="#面试前准备" class="headerlink" title="面试前准备"></a>面试前准备</h1><hr>
-<h2 id="python"><a href="#python" class="headerlink" title="python"></a>python</h2><p><a href="https://github.com/kenwoodjw/python_interview_question" target="_blank" rel="external">python面试题</a></p>
-<h2 id="java"><a href="#java" class="headerlink" title="java"></a>java</h2><p><a href="https://github.com/guanzhenxing/java_interview_manual" target="_blank" rel="external">java面试题</a></p>
-<h2 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h2><p><a href="http://www.runoob.com/redis/redis-tutorial.html" target="_blank" rel="external">redis入门</a></p>
-<h2 id="rabbitmq"><a href="#rabbitmq" class="headerlink" title="rabbitmq"></a>rabbitmq</h2><p><a href="https://www.cnblogs.com/shenyixin/p/9084249.html" target="_blank" rel="external">rabbitmq复习</a></p>
-<p><a href="https://www.cnblogs.com/frankyou/p/5283539.html" target="_blank" rel="external">rabbitmq复习</a></p>
-<h2 id="springboot"><a href="#springboot" class="headerlink" title="springboot"></a>springboot</h2><p><a href="https://blog.csdn.net/zl1zl2zl3/article/details/83715633" target="_blank" rel="external">springboot</a><br><a href="https://www.cnblogs.com/3xmq/p/springboot.html" target="_blank" rel="external">springboot</a></p>
-<h2 id="go"><a href="#go" class="headerlink" title="go"></a>go</h2><p><a href="https://blog.csdn.net/itcastcpp/article/details/80462619" target="_blank" rel="external">golang</a></p>
-<p><a href="http://www.imooc.com/article/264183" target="_blank" rel="external">go</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;面试前准备&quot;&gt;&lt;a href=&quot;#面试前准备&quot; class=&quot;headerlink&quot; title=&quot;面试前准备&quot;&gt;&lt;/a&gt;面试前准备&lt;/h1&gt;&lt;hr&gt;
-&lt;h2 id=&quot;python&quot;&gt;&lt;a href=&quot;#python&quot; class=&quot;headerlink&quot; tit
-    
-    </summary>
-    
-      <category term="面试" scheme="http://zsdf.shop/categories/%E9%9D%A2%E8%AF%95/"/>
-    
-    
-      <category term="python" scheme="http://zsdf.shop/tags/python/"/>
-    
-      <category term="java" scheme="http://zsdf.shop/tags/java/"/>
-    
-      <category term="redis" scheme="http://zsdf.shop/tags/redis/"/>
     
   </entry>
   
