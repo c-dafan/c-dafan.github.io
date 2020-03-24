@@ -4,9 +4,9 @@
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://zsdf.shop/"/>
-  <updated>2019-10-06T08:13:28.899Z</updated>
-  <id>http://zsdf.shop/</id>
+  <link href="http://c-dafan.github.io/"/>
+  <updated>2020-03-24T14:19:30.302Z</updated>
+  <id>http://c-dafan.github.io/</id>
   
   <author>
     <name>da fan</name>
@@ -16,9 +16,60 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>pytorch 分布式多卡并行训练模型</title>
+    <link href="http://c-dafan.github.io/03/24/pytorch%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    <id>http://c-dafan.github.io/03/24/pytorch分布式/</id>
+    <published>2020-03-24T14:13:34.000Z</published>
+    <updated>2020-03-24T14:19:30.302Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="pytorch-单机多卡训练模型"><a href="#pytorch-单机多卡训练模型" class="headerlink" title="pytorch 单机多卡训练模型"></a>pytorch 单机多卡训练模型</h2><h3 id="修改代码"><a href="#修改代码" class="headerlink" title="修改代码"></a>修改代码</h3><p>现在大部分github支持分布式训练，如果不支持需要做一下更改</p>
+<p>需要加入参数–local_rank</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">parser.add_argument(<span class="string">"--local_rank"</span>, type=int, default=<span class="number">0</span>)</div></pre></td></tr></table></figure>
+<p>使用local_rank初始化设备</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">device = torch.device(<span class="string">'cuda:&#123;&#125;'</span>.format(args.local_rank))</div><div class="line">torch.cuda.set_device(args.local_rank)</div><div class="line">torch.distributed.init_process_group(backend=<span class="string">"nccl"</span>, init_method=<span class="string">"env://"</span>)</div></pre></td></tr></table></figure>
+<p>创建数据加载器</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">train_sampler = DistributedSampler(train_dataset)</div><div class="line">trainloader = torch.utils.data.DataLoader(train_dataset,batch_size=config.TRAIN.BATCH_SIZE_PER_GPU, shuffle=config.TRAIN.SHUFFLE <span class="keyword">and</span> train_sampler <span class="keyword">is</span> <span class="keyword">None</span>,num_workers=config.WORKERS, sampler=train_sampler)</div></pre></td></tr></table></figure>
+<p>创建模型</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">model = nn.SyncBatchNorm.convert_sync_batchnorm(model)</div><div class="line">model = model.to(device)</div><div class="line">model = nn.parallel.DistributedDataParallel(</div><div class="line">model, device_ids=[args.local_rank], output_device=args.local_rank)</div></pre></td></tr></table></figure>
+<p>网上有很多教程，这里只做粗略介绍。</p>
+<h3 id="启动方式"><a href="#启动方式" class="headerlink" title="启动方式"></a>启动方式</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python -m torch.distributed.launch --nproc_per_node=2 train.py 参数</div></pre></td></tr></table></figure>
+<p>nproc_per_node 表示GPU的个数</p>
+<h2 id="pytorch-多机多卡训练模型"><a href="#pytorch-多机多卡训练模型" class="headerlink" title="pytorch 多机多卡训练模型"></a>pytorch 多机多卡训练模型</h2><h3 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h3><p>通过实验，发现需要多台机器之前相互可以ping通，才可以进行多机多卡训练。比如</p>
+<ul>
+<li>A主机与B主机连着同一个路由器，这样A主机与B主机是可以相互连通的。</li>
+<li>如果在A主机下的容器主机CA，和B主机下的容器主机CB，他们之前是相互独立的，CA ping不通 CB，同样CB ping不通CA。所以需要借助一个插件weave，把A主机的docker与B主机的docker相互连通，这样CA与CB通过虚拟网关相互连通。</li>
+</ul>
+<h4 id="weave插件的使用"><a href="#weave插件的使用" class="headerlink" title="weave插件的使用"></a>weave插件的使用</h4><p>假如现在有3台主机A、B、C。把A当作主节点，B、C当作工作节点，要求B和C可以与A在同一局域网。</p>
+<p>在A上运行<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">weave launch --host A的ip地址 --ipalloc-range 10.32.0.0/12</div></pre></td></tr></table></figure></p>
+<p>在B、C上运行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">weave launch --host A的ip地址</div></pre></td></tr></table></figure>
+<h4 id="容器创建"><a href="#容器创建" class="headerlink" title="容器创建"></a>容器创建</h4><p>在创建容器时，需要指定网络weave，这样才可以让容器之前相互连通。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nvidia-docker run -itd --net=weave --shm-size=60G --name 容器名 镜像名 /bin/bash</div></pre></td></tr></table></figure></p>
+<p>如果需要挂载数据卷，可以使用 参数-v<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nvidia-docker run -itd -v /data/g9:/data --net=weave --shm-size=60G --name 容器名 镜像名 /bin/bash</div></pre></td></tr></table></figure></p>
+<p>进入容器，通过<em>ifconfig</em>可以查看网络。</p>
+<h3 id="pytorch运行方式"><a href="#pytorch运行方式" class="headerlink" title="pytorch运行方式"></a>pytorch运行方式</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python -m torch.distributed.launch --nproc_per_node=2  --nnodes=2 --node_rank=0 --master_addr="10.44.0.0"   --master_port=6666 train.py 参数</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;pytorch-单机多卡训练模型&quot;&gt;&lt;a href=&quot;#pytorch-单机多卡训练模型&quot; class=&quot;headerlink&quot; title=&quot;pytorch 单机多卡训练模型&quot;&gt;&lt;/a&gt;pytorch 单机多卡训练模型&lt;/h2&gt;&lt;h3 id=&quot;修改代码&quot;&gt;&lt;a 
+    
+    </summary>
+    
+      <category term="pytorch" scheme="http://c-dafan.github.io/categories/pytorch/"/>
+    
+    
+      <category term="note" scheme="http://c-dafan.github.io/tags/note/"/>
+    
+      <category term="deeplearning" scheme="http://c-dafan.github.io/tags/deeplearning/"/>
+    
+      <category term="pytorch" scheme="http://c-dafan.github.io/tags/pytorch/"/>
+    
+  </entry>
+  
+  <entry>
     <title>pytorch走过的坑</title>
-    <link href="http://zsdf.shop/10/06/pytorch%E8%B5%B0%E8%BF%87%E7%9A%84%E5%9D%91/"/>
-    <id>http://zsdf.shop/10/06/pytorch走过的坑/</id>
+    <link href="http://c-dafan.github.io/10/06/pytorch%E8%B5%B0%E8%BF%87%E7%9A%84%E5%9D%91/"/>
+    <id>http://c-dafan.github.io/10/06/pytorch走过的坑/</id>
     <published>2019-10-06T08:09:36.000Z</published>
     <updated>2019-10-06T08:13:28.899Z</updated>
     
@@ -52,21 +103,21 @@
     
     </summary>
     
-      <category term="pytorch" scheme="http://zsdf.shop/categories/pytorch/"/>
+      <category term="pytorch" scheme="http://c-dafan.github.io/categories/pytorch/"/>
     
     
-      <category term="note" scheme="http://zsdf.shop/tags/note/"/>
+      <category term="note" scheme="http://c-dafan.github.io/tags/note/"/>
     
-      <category term="deeplearning" scheme="http://zsdf.shop/tags/deeplearning/"/>
+      <category term="deeplearning" scheme="http://c-dafan.github.io/tags/deeplearning/"/>
     
-      <category term="pytorch" scheme="http://zsdf.shop/tags/pytorch/"/>
+      <category term="pytorch" scheme="http://c-dafan.github.io/tags/pytorch/"/>
     
   </entry>
   
   <entry>
     <title>git_tree</title>
-    <link href="http://zsdf.shop/09/24/git-tree/"/>
-    <id>http://zsdf.shop/09/24/git-tree/</id>
+    <link href="http://c-dafan.github.io/09/24/git-tree/"/>
+    <id>http://c-dafan.github.io/09/24/git-tree/</id>
     <published>2019-09-24T10:08:43.000Z</published>
     <updated>2019-09-24T10:13:07.725Z</updated>
     
@@ -81,19 +132,19 @@
     
     </summary>
     
-      <category term="git" scheme="http://zsdf.shop/categories/git/"/>
+      <category term="git" scheme="http://c-dafan.github.io/categories/git/"/>
     
     
-      <category term="trick" scheme="http://zsdf.shop/tags/trick/"/>
+      <category term="trick" scheme="http://c-dafan.github.io/tags/trick/"/>
     
-      <category term="git" scheme="http://zsdf.shop/tags/git/"/>
+      <category term="git" scheme="http://c-dafan.github.io/tags/git/"/>
     
   </entry>
   
   <entry>
     <title>leecode24</title>
-    <link href="http://zsdf.shop/06/03/leecode24/"/>
-    <id>http://zsdf.shop/06/03/leecode24/</id>
+    <link href="http://c-dafan.github.io/06/03/leecode24/"/>
+    <id>http://c-dafan.github.io/06/03/leecode24/</id>
     <published>2019-06-03T06:03:23.000Z</published>
     <updated>2019-06-03T06:05:56.631Z</updated>
     
@@ -108,17 +159,17 @@
     
     </summary>
     
-      <category term="leecode" scheme="http://zsdf.shop/categories/leecode/"/>
+      <category term="leecode" scheme="http://c-dafan.github.io/categories/leecode/"/>
     
     
-      <category term="leecode" scheme="http://zsdf.shop/tags/leecode/"/>
+      <category term="leecode" scheme="http://c-dafan.github.io/tags/leecode/"/>
     
   </entry>
   
   <entry>
     <title>leecode718</title>
-    <link href="http://zsdf.shop/06/03/leecode718/"/>
-    <id>http://zsdf.shop/06/03/leecode718/</id>
+    <link href="http://c-dafan.github.io/06/03/leecode718/"/>
+    <id>http://c-dafan.github.io/06/03/leecode718/</id>
     <published>2019-06-03T05:55:58.000Z</published>
     <updated>2019-06-03T06:04:25.187Z</updated>
     
@@ -134,17 +185,17 @@
     
     </summary>
     
-      <category term="leecode" scheme="http://zsdf.shop/categories/leecode/"/>
+      <category term="leecode" scheme="http://c-dafan.github.io/categories/leecode/"/>
     
     
-      <category term="leecode" scheme="http://zsdf.shop/tags/leecode/"/>
+      <category term="leecode" scheme="http://c-dafan.github.io/tags/leecode/"/>
     
   </entry>
   
   <entry>
     <title>python_tqdm</title>
-    <link href="http://zsdf.shop/05/27/python-tqdm/"/>
-    <id>http://zsdf.shop/05/27/python-tqdm/</id>
+    <link href="http://c-dafan.github.io/05/27/python-tqdm/"/>
+    <id>http://c-dafan.github.io/05/27/python-tqdm/</id>
     <published>2019-05-27T07:28:33.000Z</published>
     <updated>2019-06-03T06:17:21.050Z</updated>
     
@@ -158,17 +209,17 @@
     
     </summary>
     
-      <category term="python" scheme="http://zsdf.shop/categories/python/"/>
+      <category term="python" scheme="http://c-dafan.github.io/categories/python/"/>
     
     
-      <category term="python" scheme="http://zsdf.shop/tags/python/"/>
+      <category term="python" scheme="http://c-dafan.github.io/tags/python/"/>
     
   </entry>
   
   <entry>
     <title>leecode/math50</title>
-    <link href="http://zsdf.shop/05/24/leecode-math50/"/>
-    <id>http://zsdf.shop/05/24/leecode-math50/</id>
+    <link href="http://c-dafan.github.io/05/24/leecode-math50/"/>
+    <id>http://c-dafan.github.io/05/24/leecode-math50/</id>
     <published>2019-05-24T02:55:52.000Z</published>
     <updated>2019-05-24T03:07:10.331Z</updated>
     
@@ -182,17 +233,17 @@
     
     </summary>
     
-      <category term="leecode" scheme="http://zsdf.shop/categories/leecode/"/>
+      <category term="leecode" scheme="http://c-dafan.github.io/categories/leecode/"/>
     
     
-      <category term="leecode" scheme="http://zsdf.shop/tags/leecode/"/>
+      <category term="leecode" scheme="http://c-dafan.github.io/tags/leecode/"/>
     
   </entry>
   
   <entry>
     <title>训练技巧总结</title>
-    <link href="http://zsdf.shop/05/15/dl_train-trick/"/>
-    <id>http://zsdf.shop/05/15/dl_train-trick/</id>
+    <link href="http://c-dafan.github.io/05/15/dl_train-trick/"/>
+    <id>http://c-dafan.github.io/05/15/dl_train-trick/</id>
     <published>2019-05-15T02:05:19.000Z</published>
     <updated>2019-06-03T06:14:16.708Z</updated>
     
@@ -224,21 +275,21 @@
     
     </summary>
     
-      <category term="deeplearn" scheme="http://zsdf.shop/categories/deeplearn/"/>
+      <category term="deeplearn" scheme="http://c-dafan.github.io/categories/deeplearn/"/>
     
     
-      <category term="deeplearn" scheme="http://zsdf.shop/tags/deeplearn/"/>
+      <category term="deeplearn" scheme="http://c-dafan.github.io/tags/deeplearn/"/>
     
-      <category term="trick" scheme="http://zsdf.shop/tags/trick/"/>
+      <category term="trick" scheme="http://c-dafan.github.io/tags/trick/"/>
     
-      <category term="train" scheme="http://zsdf.shop/tags/train/"/>
+      <category term="train" scheme="http://c-dafan.github.io/tags/train/"/>
     
   </entry>
   
   <entry>
     <title>ImageDataGenerator</title>
-    <link href="http://zsdf.shop/05/15/dl_ImageDataGenerator/"/>
-    <id>http://zsdf.shop/05/15/dl_ImageDataGenerator/</id>
+    <link href="http://c-dafan.github.io/05/15/dl_ImageDataGenerator/"/>
+    <id>http://c-dafan.github.io/05/15/dl_ImageDataGenerator/</id>
     <published>2019-05-15T02:03:53.000Z</published>
     <updated>2019-05-15T02:20:06.421Z</updated>
     
@@ -250,19 +301,19 @@
     
     </summary>
     
-      <category term="deeplearn" scheme="http://zsdf.shop/categories/deeplearn/"/>
+      <category term="deeplearn" scheme="http://c-dafan.github.io/categories/deeplearn/"/>
     
     
-      <category term="deeplearn" scheme="http://zsdf.shop/tags/deeplearn/"/>
+      <category term="deeplearn" scheme="http://c-dafan.github.io/tags/deeplearn/"/>
     
-      <category term="keras" scheme="http://zsdf.shop/tags/keras/"/>
+      <category term="keras" scheme="http://c-dafan.github.io/tags/keras/"/>
     
   </entry>
   
   <entry>
     <title>easy_install--打脸python爱好者</title>
-    <link href="http://zsdf.shop/05/13/python_easy-install/"/>
-    <id>http://zsdf.shop/05/13/python_easy-install/</id>
+    <link href="http://c-dafan.github.io/05/13/python_easy-install/"/>
+    <id>http://c-dafan.github.io/05/13/python_easy-install/</id>
     <published>2019-05-12T23:59:23.000Z</published>
     <updated>2019-05-13T00:22:58.713Z</updated>
     
@@ -298,21 +349,21 @@
     
     </summary>
     
-      <category term="python" scheme="http://zsdf.shop/categories/python/"/>
+      <category term="python" scheme="http://c-dafan.github.io/categories/python/"/>
     
     
-      <category term="python" scheme="http://zsdf.shop/tags/python/"/>
+      <category term="python" scheme="http://c-dafan.github.io/tags/python/"/>
     
-      <category term="conda" scheme="http://zsdf.shop/tags/conda/"/>
+      <category term="conda" scheme="http://c-dafan.github.io/tags/conda/"/>
     
-      <category term="模块管理， pip" scheme="http://zsdf.shop/tags/%E6%A8%A1%E5%9D%97%E7%AE%A1%E7%90%86%EF%BC%8C-pip/"/>
+      <category term="模块管理， pip" scheme="http://c-dafan.github.io/tags/%E6%A8%A1%E5%9D%97%E7%AE%A1%E7%90%86%EF%BC%8C-pip/"/>
     
   </entry>
   
   <entry>
     <title>ocrDeepLearn</title>
-    <link href="http://zsdf.shop/05/09/dl_ocrDeepLearn/"/>
-    <id>http://zsdf.shop/05/09/dl_ocrDeepLearn/</id>
+    <link href="http://c-dafan.github.io/05/09/dl_ocrDeepLearn/"/>
+    <id>http://c-dafan.github.io/05/09/dl_ocrDeepLearn/</id>
     <published>2019-05-09T13:05:35.000Z</published>
     <updated>2019-06-03T06:10:14.949Z</updated>
     
@@ -339,21 +390,21 @@
     
     </summary>
     
-      <category term="deeplearn" scheme="http://zsdf.shop/categories/deeplearn/"/>
+      <category term="deeplearn" scheme="http://c-dafan.github.io/categories/deeplearn/"/>
     
     
-      <category term="deeplearn" scheme="http://zsdf.shop/tags/deeplearn/"/>
+      <category term="deeplearn" scheme="http://c-dafan.github.io/tags/deeplearn/"/>
     
-      <category term="ocr" scheme="http://zsdf.shop/tags/ocr/"/>
+      <category term="ocr" scheme="http://c-dafan.github.io/tags/ocr/"/>
     
-      <category term="笔记" scheme="http://zsdf.shop/tags/%E7%AC%94%E8%AE%B0/"/>
+      <category term="笔记" scheme="http://c-dafan.github.io/tags/%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
   <entry>
     <title>goTrick</title>
-    <link href="http://zsdf.shop/05/08/goTrick/"/>
-    <id>http://zsdf.shop/05/08/goTrick/</id>
+    <link href="http://c-dafan.github.io/05/08/goTrick/"/>
+    <id>http://c-dafan.github.io/05/08/goTrick/</id>
     <published>2019-05-08T13:19:19.000Z</published>
     <updated>2019-05-08T13:20:12.909Z</updated>
     
@@ -366,19 +417,19 @@
     
     </summary>
     
-      <category term="go" scheme="http://zsdf.shop/categories/go/"/>
+      <category term="go" scheme="http://c-dafan.github.io/categories/go/"/>
     
     
-      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
+      <category term="go" scheme="http://c-dafan.github.io/tags/go/"/>
     
-      <category term="trick" scheme="http://zsdf.shop/tags/trick/"/>
+      <category term="trick" scheme="http://c-dafan.github.io/tags/trick/"/>
     
   </entry>
   
   <entry>
     <title>log4go用户指导</title>
-    <link href="http://zsdf.shop/04/26/log4go%E7%94%A8%E6%88%B7%E6%8C%87%E5%AF%BC/"/>
-    <id>http://zsdf.shop/04/26/log4go用户指导/</id>
+    <link href="http://c-dafan.github.io/04/26/log4go%E7%94%A8%E6%88%B7%E6%8C%87%E5%AF%BC/"/>
+    <id>http://c-dafan.github.io/04/26/log4go用户指导/</id>
     <published>2019-04-26T06:52:41.000Z</published>
     <updated>2019-04-27T15:24:13.899Z</updated>
     
@@ -439,19 +490,19 @@
     
     </summary>
     
-      <category term="go" scheme="http://zsdf.shop/categories/go/"/>
+      <category term="go" scheme="http://c-dafan.github.io/categories/go/"/>
     
     
-      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
+      <category term="go" scheme="http://c-dafan.github.io/tags/go/"/>
     
-      <category term="日志" scheme="http://zsdf.shop/tags/%E6%97%A5%E5%BF%97/"/>
+      <category term="日志" scheme="http://c-dafan.github.io/tags/%E6%97%A5%E5%BF%97/"/>
     
   </entry>
   
   <entry>
     <title>图像分割学习总结</title>
-    <link href="http://zsdf.shop/04/25/dl_%E5%9B%BE%E5%83%8F%E5%88%86%E5%89%B2%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/"/>
-    <id>http://zsdf.shop/04/25/dl_图像分割学习总结/</id>
+    <link href="http://c-dafan.github.io/04/25/dl_%E5%9B%BE%E5%83%8F%E5%88%86%E5%89%B2%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/"/>
+    <id>http://c-dafan.github.io/04/25/dl_图像分割学习总结/</id>
     <published>2019-04-25T13:01:07.000Z</published>
     <updated>2019-04-26T05:09:12.999Z</updated>
     
@@ -487,21 +538,21 @@
     
     </summary>
     
-      <category term="deeplearn" scheme="http://zsdf.shop/categories/deeplearn/"/>
+      <category term="deeplearn" scheme="http://c-dafan.github.io/categories/deeplearn/"/>
     
     
-      <category term="deeplearn" scheme="http://zsdf.shop/tags/deeplearn/"/>
+      <category term="deeplearn" scheme="http://c-dafan.github.io/tags/deeplearn/"/>
     
-      <category term="总结" scheme="http://zsdf.shop/tags/%E6%80%BB%E7%BB%93/"/>
+      <category term="总结" scheme="http://c-dafan.github.io/tags/%E6%80%BB%E7%BB%93/"/>
     
-      <category term="训练技巧" scheme="http://zsdf.shop/tags/%E8%AE%AD%E7%BB%83%E6%8A%80%E5%B7%A7/"/>
+      <category term="训练技巧" scheme="http://c-dafan.github.io/tags/%E8%AE%AD%E7%BB%83%E6%8A%80%E5%B7%A7/"/>
     
   </entry>
   
   <entry>
     <title>go网络编程</title>
-    <link href="http://zsdf.shop/04/22/goNetWorkCode/"/>
-    <id>http://zsdf.shop/04/22/goNetWorkCode/</id>
+    <link href="http://c-dafan.github.io/04/22/goNetWorkCode/"/>
+    <id>http://c-dafan.github.io/04/22/goNetWorkCode/</id>
     <published>2019-04-22T13:00:47.000Z</published>
     <updated>2019-04-23T02:14:21.339Z</updated>
     
@@ -524,21 +575,21 @@
     
     </summary>
     
-      <category term="go" scheme="http://zsdf.shop/categories/go/"/>
+      <category term="go" scheme="http://c-dafan.github.io/categories/go/"/>
     
     
-      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
+      <category term="go" scheme="http://c-dafan.github.io/tags/go/"/>
     
-      <category term="网络编程" scheme="http://zsdf.shop/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/"/>
+      <category term="网络编程" scheme="http://c-dafan.github.io/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="计算机网络" scheme="http://zsdf.shop/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+      <category term="计算机网络" scheme="http://c-dafan.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     
   </entry>
   
   <entry>
     <title>go并发</title>
-    <link href="http://zsdf.shop/04/17/go%E5%B9%B6%E5%8F%91/"/>
-    <id>http://zsdf.shop/04/17/go并发/</id>
+    <link href="http://c-dafan.github.io/04/17/go%E5%B9%B6%E5%8F%91/"/>
+    <id>http://c-dafan.github.io/04/17/go并发/</id>
     <published>2019-04-17T10:48:03.000Z</published>
     <updated>2019-04-22T07:03:17.675Z</updated>
     
@@ -575,19 +626,19 @@
     
     </summary>
     
-      <category term="go" scheme="http://zsdf.shop/categories/go/"/>
+      <category term="go" scheme="http://c-dafan.github.io/categories/go/"/>
     
     
-      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
+      <category term="go" scheme="http://c-dafan.github.io/tags/go/"/>
     
-      <category term="并发" scheme="http://zsdf.shop/tags/%E5%B9%B6%E5%8F%91/"/>
+      <category term="并发" scheme="http://c-dafan.github.io/tags/%E5%B9%B6%E5%8F%91/"/>
     
   </entry>
   
   <entry>
     <title>conda大坑</title>
-    <link href="http://zsdf.shop/04/13/python_conda%E5%A4%A7%E5%9D%91/"/>
-    <id>http://zsdf.shop/04/13/python_conda大坑/</id>
+    <link href="http://c-dafan.github.io/04/13/python_conda%E5%A4%A7%E5%9D%91/"/>
+    <id>http://c-dafan.github.io/04/13/python_conda大坑/</id>
     <published>2019-04-13T05:29:41.000Z</published>
     <updated>2019-05-13T00:01:17.173Z</updated>
     
@@ -621,25 +672,25 @@
     
     </summary>
     
-      <category term="python" scheme="http://zsdf.shop/categories/python/"/>
+      <category term="python" scheme="http://c-dafan.github.io/categories/python/"/>
     
     
-      <category term="python" scheme="http://zsdf.shop/tags/python/"/>
+      <category term="python" scheme="http://c-dafan.github.io/tags/python/"/>
     
-      <category term="conda" scheme="http://zsdf.shop/tags/conda/"/>
+      <category term="conda" scheme="http://c-dafan.github.io/tags/conda/"/>
     
-      <category term="奇坑" scheme="http://zsdf.shop/tags/%E5%A5%87%E5%9D%91/"/>
+      <category term="奇坑" scheme="http://c-dafan.github.io/tags/%E5%A5%87%E5%9D%91/"/>
     
-      <category term="pip" scheme="http://zsdf.shop/tags/pip/"/>
+      <category term="pip" scheme="http://c-dafan.github.io/tags/pip/"/>
     
-      <category term="模块管理" scheme="http://zsdf.shop/tags/%E6%A8%A1%E5%9D%97%E7%AE%A1%E7%90%86/"/>
+      <category term="模块管理" scheme="http://c-dafan.github.io/tags/%E6%A8%A1%E5%9D%97%E7%AE%A1%E7%90%86/"/>
     
   </entry>
   
   <entry>
     <title>Lightsocks环境配置</title>
-    <link href="http://zsdf.shop/04/12/go_Lightsocks%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
-    <id>http://zsdf.shop/04/12/go_Lightsocks环境配置/</id>
+    <link href="http://c-dafan.github.io/04/12/go_Lightsocks%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
+    <id>http://c-dafan.github.io/04/12/go_Lightsocks环境配置/</id>
     <published>2019-04-12T01:03:48.000Z</published>
     <updated>2019-04-12T03:55:55.306Z</updated>
     
@@ -692,19 +743,19 @@
     
     </summary>
     
-      <category term="计算机网络" scheme="http://zsdf.shop/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+      <category term="计算机网络" scheme="http://c-dafan.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
+      <category term="go" scheme="http://c-dafan.github.io/tags/go/"/>
     
-      <category term="代理" scheme="http://zsdf.shop/tags/%E4%BB%A3%E7%90%86/"/>
+      <category term="代理" scheme="http://c-dafan.github.io/tags/%E4%BB%A3%E7%90%86/"/>
     
   </entry>
   
   <entry>
     <title>NAT一探究竟</title>
-    <link href="http://zsdf.shop/04/10/NAT%E4%B8%80%E6%8E%A2%E7%A9%B6%E7%AB%9F/"/>
-    <id>http://zsdf.shop/04/10/NAT一探究竟/</id>
+    <link href="http://c-dafan.github.io/04/10/NAT%E4%B8%80%E6%8E%A2%E7%A9%B6%E7%AB%9F/"/>
+    <id>http://c-dafan.github.io/04/10/NAT一探究竟/</id>
     <published>2019-04-10T05:39:04.000Z</published>
     <updated>2019-04-10T06:19:25.820Z</updated>
     
@@ -724,23 +775,23 @@
     
     </summary>
     
-      <category term="计算机网络" scheme="http://zsdf.shop/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+      <category term="计算机网络" scheme="http://c-dafan.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="NAT" scheme="http://zsdf.shop/tags/NAT/"/>
+      <category term="NAT" scheme="http://c-dafan.github.io/tags/NAT/"/>
     
-      <category term="socket" scheme="http://zsdf.shop/tags/socket/"/>
+      <category term="socket" scheme="http://c-dafan.github.io/tags/socket/"/>
     
-      <category term="代理" scheme="http://zsdf.shop/tags/%E4%BB%A3%E7%90%86/"/>
+      <category term="代理" scheme="http://c-dafan.github.io/tags/%E4%BB%A3%E7%90%86/"/>
     
-      <category term="VPN" scheme="http://zsdf.shop/tags/VPN/"/>
+      <category term="VPN" scheme="http://c-dafan.github.io/tags/VPN/"/>
     
   </entry>
   
   <entry>
     <title>网络代理分析</title>
-    <link href="http://zsdf.shop/04/10/%E7%BD%91%E7%BB%9C%E4%BB%A3%E7%90%86%E5%88%86%E6%9E%90%E7%BC%96%E5%86%99/"/>
-    <id>http://zsdf.shop/04/10/网络代理分析编写/</id>
+    <link href="http://c-dafan.github.io/04/10/%E7%BD%91%E7%BB%9C%E4%BB%A3%E7%90%86%E5%88%86%E6%9E%90%E7%BC%96%E5%86%99/"/>
+    <id>http://c-dafan.github.io/04/10/网络代理分析编写/</id>
     <published>2019-04-10T00:00:31.000Z</published>
     <updated>2019-04-10T05:42:18.065Z</updated>
     
@@ -761,62 +812,20 @@
     
     </summary>
     
-      <category term="计算机网络" scheme="http://zsdf.shop/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+      <category term="计算机网络" scheme="http://c-dafan.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
+      <category term="go" scheme="http://c-dafan.github.io/tags/go/"/>
     
-      <category term="socket" scheme="http://zsdf.shop/tags/socket/"/>
+      <category term="socket" scheme="http://c-dafan.github.io/tags/socket/"/>
     
-      <category term="python" scheme="http://zsdf.shop/tags/python/"/>
+      <category term="python" scheme="http://c-dafan.github.io/tags/python/"/>
     
-      <category term="网络" scheme="http://zsdf.shop/tags/%E7%BD%91%E7%BB%9C/"/>
+      <category term="网络" scheme="http://c-dafan.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
     
-      <category term="http" scheme="http://zsdf.shop/tags/http/"/>
+      <category term="http" scheme="http://c-dafan.github.io/tags/http/"/>
     
-      <category term="tcp" scheme="http://zsdf.shop/tags/tcp/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>go 爬虫</title>
-    <link href="http://zsdf.shop/04/09/GoSpider/"/>
-    <id>http://zsdf.shop/04/09/GoSpider/</id>
-    <published>2019-04-09T09:36:56.000Z</published>
-    <updated>2019-04-10T06:44:29.457Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="需要的"><a href="#需要的" class="headerlink" title="需要的"></a>需要的</h2><ul>
-<li>net/http 请求网络</li>
-<li>正则表达式 提取内容</li>
-<li>encode/json 解析json</li>
-<li>os 创建文件</li>
-<li>并发</li>
-</ul>
-<h2 id="豆瓣电影评分"><a href="#豆瓣电影评分" class="headerlink" title="豆瓣电影评分"></a>豆瓣电影评分</h2><h3 id="获取请求"><a href="#获取请求" class="headerlink" title="获取请求"></a>获取请求</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">response, err := http.Get(url)</div><div class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">    <span class="keyword">return</span></div><div class="line">&#125;</div><div class="line">buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">4096</span>)</div><div class="line"><span class="keyword">var</span> str <span class="keyword">string</span></div><div class="line"><span class="keyword">for</span> <span class="literal">true</span> &#123;</div><div class="line">    n, err := response.Body.Read(buf)</div><div class="line">    <span class="keyword">if</span> n == <span class="number">0</span> &#123;</div><div class="line">        <span class="keyword">break</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &amp;&amp; err != io.EOF &#123;</div><div class="line">        <span class="keyword">return</span></div><div class="line">    &#125;</div><div class="line">    str += <span class="keyword">string</span>(buf[:n])</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h3><p>通过正则表达式获取内容</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">reg1 := regexp.MustCompile(<span class="string">`&lt;img width="100" alt="(?s:(.*?))"`</span>)</div><div class="line">reg2 := regexp.MustCompile(<span class="string">`&lt;span class="rating_num" property="v:average"&gt;(?s:(.*?))&lt;/span&gt;`</span>)</div><div class="line">reg3 := regexp.MustCompile(<span class="string">`&lt;span&gt;(?s:(\d*?))人评价&lt;/span&gt;`</span>)</div><div class="line">str1 := reg1.FindAllStringSubmatch(str, <span class="number">-1</span>)</div><div class="line">str2 := reg2.FindAllStringSubmatch(str, <span class="number">-1</span>)</div><div class="line">str3 := reg3.FindAllStringSubmatch(str, <span class="number">-1</span>)</div><div class="line"><span class="keyword">for</span> v := <span class="keyword">range</span> str3&#123;</div><div class="line">    fmt.Println(str1[v],str2[v],str3[v])</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="全部代码"><a href="#全部代码" class="headerlink" title="全部代码"></a>全部代码</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">//https://movie.douban.com/top250?start=75&amp;filter=</span></div><div class="line"><span class="comment">// &lt;img width="100" alt="</span></div><div class="line"><span class="comment">//&lt;span class="rating_num" property="v:average"&gt;8.7&lt;/span&gt;</span></div><div class="line"><span class="comment">// &lt;span&gt;620194人评价&lt;/span&gt;</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">spider</span><span class="params">(url <span class="keyword">string</span>, page <span class="keyword">chan</span> <span class="keyword">int</span>, v <span class="keyword">int</span>)</span></span> &#123;</div><div class="line">	response, err := http.Get(url)</div><div class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">		<span class="keyword">return</span></div><div class="line">	&#125;</div><div class="line">	buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">4096</span>)</div><div class="line">	<span class="keyword">var</span> str <span class="keyword">string</span></div><div class="line">	<span class="keyword">for</span> <span class="literal">true</span> &#123;</div><div class="line">		n, err := response.Body.Read(buf)</div><div class="line">		<span class="keyword">if</span> n == <span class="number">0</span> &#123;</div><div class="line">			<span class="keyword">break</span></div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &amp;&amp; err != io.EOF &#123;</div><div class="line">			<span class="keyword">return</span></div><div class="line">		&#125;</div><div class="line">		str += <span class="keyword">string</span>(buf[:n])</div><div class="line">	&#125;</div><div class="line">	reg1 := regexp.MustCompile(<span class="string">`&lt;img width="100" alt="(?s:(.*?))"`</span>)</div><div class="line">	reg2 := regexp.MustCompile(<span class="string">`&lt;span class="rating_num" property="v:average"&gt;(?s:(.*?))&lt;/span&gt;`</span>)</div><div class="line">	reg3 := regexp.MustCompile(<span class="string">`&lt;span&gt;(?s:(\d*?))人评价&lt;/span&gt;`</span>)</div><div class="line">	str1 := reg1.FindAllStringSubmatch(str, <span class="number">-1</span>)</div><div class="line">	str2 := reg2.FindAllStringSubmatch(str, <span class="number">-1</span>)</div><div class="line">	str3 := reg3.FindAllStringSubmatch(str, <span class="number">-1</span>)</div><div class="line">	<span class="keyword">for</span> v := <span class="keyword">range</span> str3&#123;</div><div class="line">		fmt.Println(str1[v],str2[v],str3[v])</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">defer</span> response.Body.Close()</div><div class="line">	page &lt;- v</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">working</span><span class="params">(start <span class="keyword">int</span>, end <span class="keyword">int</span>)</span></span> &#123;</div><div class="line">	page := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>)</div><div class="line">	<span class="keyword">for</span> v := start; v &lt;= end; v++ &#123;</div><div class="line">		url := fmt.Sprintf(<span class="string">"https://movie.douban.com/top250?start=%d&amp;filter="</span>, v*<span class="number">25</span>)</div><div class="line">		<span class="keyword">go</span> spider(url, page, v)</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> v := start; v &lt;= end; v++ &#123;</div><div class="line">		fmt.Println(&lt;-page)</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">var</span> start, end <span class="keyword">int</span></div><div class="line">	fmt.Scan(&amp;start)</div><div class="line">	fmt.Scan(&amp;end)</div><div class="line">	working(start, end)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="斗鱼"><a href="#斗鱼" class="headerlink" title="斗鱼"></a>斗鱼</h2><p>斗鱼通过后端传json到前端，然后解析json，在前端显示。请求部分同上</p>
-<h3 id="json解析部分"><a href="#json解析部分" class="headerlink" title="json解析部分"></a>json解析部分</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">jsonContent:=<span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">interface</span>&#123;&#125;)</div><div class="line">_ = json.Unmarshal([]<span class="keyword">byte</span>(str),&amp;jsonContent)</div><div class="line">data := jsonContent[<span class="string">"data"</span>]</div><div class="line">data2 := data.(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">interface</span>&#123;&#125;)</div><div class="line">data3 := data2[<span class="string">"rl"</span>].([]<span class="keyword">interface</span>&#123;&#125;)</div><div class="line"><span class="keyword">for</span> v := <span class="keyword">range</span> data3&#123;</div><div class="line">    fmt.Println(data3[v].(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">interface</span>&#123;&#125;)[<span class="string">"rs16"</span>])</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>json解析需要成一个string:interface{}的字典。空接口类型需要自己断言。一层一层找到需要的数据。</p>
-<h3 id="全部代码-1"><a href="#全部代码-1" class="headerlink" title="全部代码"></a>全部代码</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">import</span> (</div><div class="line">	<span class="string">"encoding/json"</span></div><div class="line">	<span class="string">"fmt"</span></div><div class="line">	<span class="string">"io"</span></div><div class="line">	<span class="string">"net/http"</span></div><div class="line">	<span class="string">"strconv"</span></div><div class="line">)</div><div class="line"></div><div class="line"><span class="comment">// https://www.douyu.com/gapi/rknc/directory/yzRec/4</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">spider</span><span class="params">(v <span class="keyword">int</span>, page <span class="keyword">chan</span> <span class="keyword">int</span>)</span></span>  &#123;</div><div class="line">	url := <span class="string">"https://www.douyu.com/gapi/rknc/directory/yzRec/"</span>+strconv.Itoa(v)</div><div class="line">	response, err := http.Get(url)</div><div class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span>&#123;</div><div class="line">		page &lt;- v</div><div class="line">		<span class="keyword">return</span></div><div class="line">	&#125;</div><div class="line">	<span class="keyword">var</span> str <span class="keyword">string</span></div><div class="line">	buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">4096</span>)</div><div class="line">	<span class="keyword">for</span> <span class="literal">true</span> &#123;</div><div class="line">		n, err:= response.Body.Read(buf)</div><div class="line">		<span class="keyword">if</span> n == <span class="number">0</span> &#123;</div><div class="line">			<span class="keyword">break</span></div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &amp;&amp; err != io.EOF &#123;</div><div class="line">			page &lt;- v</div><div class="line">			<span class="keyword">return</span></div><div class="line">		&#125;</div><div class="line">		str += <span class="keyword">string</span>(buf[:n])</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">defer</span> response.Body.Close()</div><div class="line"></div><div class="line">	<span class="comment">//json.Unmarshal([]byte(str), )</span></div><div class="line">	<span class="comment">//reg := regexp.MustCompile(`(https://rpic.douyucdn.cn/live-cover/.*?)"`)</span></div><div class="line">	<span class="comment">//pngs := reg.FindAllStringSubmatch(str, -1)</span></div><div class="line">	<span class="comment">//for v:= range pngs&#123;</span></div><div class="line">	<span class="comment">//	fmt.Println(pngs[v])</span></div><div class="line">	<span class="comment">//&#125;</span></div><div class="line">	jsonContent:=<span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">interface</span>&#123;&#125;)</div><div class="line">	_ = json.Unmarshal([]<span class="keyword">byte</span>(str),&amp;jsonContent)</div><div class="line">	data := jsonContent[<span class="string">"data"</span>]</div><div class="line">	data2 := data.(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">interface</span>&#123;&#125;)</div><div class="line">	data3 := data2[<span class="string">"rl"</span>].([]<span class="keyword">interface</span>&#123;&#125;)</div><div class="line">	<span class="keyword">for</span> v := <span class="keyword">range</span> data3&#123;</div><div class="line">		fmt.Println(data3[v].(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">interface</span>&#123;&#125;)[<span class="string">"rs16"</span>])</div><div class="line">	&#125;</div><div class="line">	page &lt;- v</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">DouSpider</span><span class="params">(start <span class="keyword">int</span>, end <span class="keyword">int</span>)</span></span>  &#123;</div><div class="line">	page := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>)</div><div class="line">	<span class="keyword">for</span> v := start; v &lt;= end; v++ &#123;</div><div class="line">		<span class="keyword">go</span> spider(v, page)</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span> v := start; v &lt;= end; v++ &#123;</div><div class="line">		fmt.Println(&lt;-page)</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">var</span> start, end <span class="keyword">int</span></div><div class="line">	fmt.Scan(&amp;start)</div><div class="line">	fmt.Scan(&amp;end)</div><div class="line">	DouSpider(start, end)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;需要的&quot;&gt;&lt;a href=&quot;#需要的&quot; class=&quot;headerlink&quot; title=&quot;需要的&quot;&gt;&lt;/a&gt;需要的&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;net/http 请求网络&lt;/li&gt;
-&lt;li&gt;正则表达式 提取内容&lt;/li&gt;
-&lt;li&gt;encode/json 解析jso
-    
-    </summary>
-    
-      <category term="go" scheme="http://zsdf.shop/categories/go/"/>
-    
-    
-      <category term="go" scheme="http://zsdf.shop/tags/go/"/>
-    
-      <category term="spider" scheme="http://zsdf.shop/tags/spider/"/>
+      <category term="tcp" scheme="http://c-dafan.github.io/tags/tcp/"/>
     
   </entry>
   

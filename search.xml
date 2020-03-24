@@ -3,6 +3,13 @@
   
     
     <entry>
+      <title><![CDATA[pytorch 分布式多卡并行训练模型]]></title>
+      <url>%2F03%2F24%2Fpytorch%E5%88%86%E5%B8%83%E5%BC%8F%2F</url>
+      <content type="text"><![CDATA[pytorch 单机多卡训练模型修改代码现在大部分github支持分布式训练，如果不支持需要做一下更改 需要加入参数–local_rank 1parser.add_argument("--local_rank", type=int, default=0) 使用local_rank初始化设备 123device = torch.device('cuda:&#123;&#125;'.format(args.local_rank))torch.cuda.set_device(args.local_rank)torch.distributed.init_process_group(backend="nccl", init_method="env://") 创建数据加载器 12train_sampler = DistributedSampler(train_dataset)trainloader = torch.utils.data.DataLoader(train_dataset,batch_size=config.TRAIN.BATCH_SIZE_PER_GPU, shuffle=config.TRAIN.SHUFFLE and train_sampler is None,num_workers=config.WORKERS, sampler=train_sampler) 创建模型 1234model = nn.SyncBatchNorm.convert_sync_batchnorm(model)model = model.to(device)model = nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank], output_device=args.local_rank) 网上有很多教程，这里只做粗略介绍。 启动方式1python -m torch.distributed.launch --nproc_per_node=2 train.py 参数 nproc_per_node 表示GPU的个数 pytorch 多机多卡训练模型环境配置通过实验，发现需要多台机器之前相互可以ping通，才可以进行多机多卡训练。比如 A主机与B主机连着同一个路由器，这样A主机与B主机是可以相互连通的。 如果在A主机下的容器主机CA，和B主机下的容器主机CB，他们之前是相互独立的，CA ping不通 CB，同样CB ping不通CA。所以需要借助一个插件weave，把A主机的docker与B主机的docker相互连通，这样CA与CB通过虚拟网关相互连通。 weave插件的使用假如现在有3台主机A、B、C。把A当作主节点，B、C当作工作节点，要求B和C可以与A在同一局域网。 在A上运行1weave launch --host A的ip地址 --ipalloc-range 10.32.0.0/12 在B、C上运行 1weave launch --host A的ip地址 容器创建在创建容器时，需要指定网络weave，这样才可以让容器之前相互连通。1nvidia-docker run -itd --net=weave --shm-size=60G --name 容器名 镜像名 /bin/bash 如果需要挂载数据卷，可以使用 参数-v1nvidia-docker run -itd -v /data/g9:/data --net=weave --shm-size=60G --name 容器名 镜像名 /bin/bash 进入容器，通过ifconfig可以查看网络。 pytorch运行方式1python -m torch.distributed.launch --nproc_per_node=2 --nnodes=2 --node_rank=0 --master_addr="10.44.0.0" --master_port=6666 train.py 参数]]></content>
+    </entry>
+
+    
+    <entry>
       <title><![CDATA[pytorch走过的坑]]></title>
       <url>%2F10%2F06%2Fpytorch%E8%B5%B0%E8%BF%87%E7%9A%84%E5%9D%91%2F</url>
       <content type="text"><![CDATA[记录一下学习pytorch遇到的两大坑 zero_grad 需要收到清空历史梯度 torch.nn.CrossEntropyLoss 不用加入激活层softmax，在运算时已经加入了，如果加入softmax用nnl损失]]></content>

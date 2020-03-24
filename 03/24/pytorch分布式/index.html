@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="note,deeplearning,pytorch," />
 
 
 
@@ -90,17 +90,17 @@
 
 
 
-<meta name="description" content="博客笔记 自2017年搭建好，再也没用过，两年后的现在重拾博客">
-<meta name="keywords">
+<meta name="description" content="pytorch 单机多卡训练模型修改代码现在大部分github支持分布式训练，如果不支持需要做一下更改 需要加入参数–local_rank 1parser.add_argument(&quot;--local_rank&quot;, type=int, default=0) 使用local_rank初始化设备 123device = torch.device(&apos;cuda:&amp;#123;&amp;#125;&apos;.format(ar">
+<meta name="keywords" content="note,deeplearning,pytorch">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hello world">
-<meta property="og:url" content="http://c-dafan.github.io/04/25/hello/index.html">
+<meta property="og:title" content="pytorch 分布式多卡并行训练模型">
+<meta property="og:url" content="http://c-dafan.github.io/03/24/pytorch分布式/index.html">
 <meta property="og:site_name" content="我的笔记">
-<meta property="og:description" content="博客笔记 自2017年搭建好，再也没用过，两年后的现在重拾博客">
-<meta property="og:updated_time" content="2019-04-06T02:45:07.782Z">
+<meta property="og:description" content="pytorch 单机多卡训练模型修改代码现在大部分github支持分布式训练，如果不支持需要做一下更改 需要加入参数–local_rank 1parser.add_argument(&quot;--local_rank&quot;, type=int, default=0) 使用local_rank初始化设备 123device = torch.device(&apos;cuda:&amp;#123;&amp;#125;&apos;.format(ar">
+<meta property="og:updated_time" content="2020-03-24T14:19:30.302Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hello world">
-<meta name="twitter:description" content="博客笔记 自2017年搭建好，再也没用过，两年后的现在重拾博客">
+<meta name="twitter:title" content="pytorch 分布式多卡并行训练模型">
+<meta name="twitter:description" content="pytorch 单机多卡训练模型修改代码现在大部分github支持分布式训练，如果不支持需要做一下更改 需要加入参数–local_rank 1parser.add_argument(&quot;--local_rank&quot;, type=int, default=0) 使用local_rank初始化设备 123device = torch.device(&apos;cuda:&amp;#123;&amp;#125;&apos;.format(ar">
 
 
 
@@ -132,7 +132,7 @@
 
 
 
-  <title>hello world | 我的笔记</title>
+  <title>pytorch 分布式多卡并行训练模型 | 我的笔记</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -261,7 +261,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://c-dafan.github.io/04/25/hello/">
+    <link itemprop="mainEntityOfPage" href="http://c-dafan.github.io/03/24/pytorch分布式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="da fan">
@@ -282,7 +282,7 @@
             
             
               
-                hello world
+                pytorch 分布式多卡并行训练模型
               
             
           </h1>
@@ -297,8 +297,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-25T19:12:19+08:00">
-                2017-04-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-24T22:13:34+08:00">
+                2020-03-24
               </time>
             
 
@@ -307,6 +307,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/pytorch/" itemprop="url" rel="index">
+                    <span itemprop="name">pytorch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -329,7 +351,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  25
+                  532
                 </span>
               
 
@@ -345,7 +367,7 @@
                   <span class="post-meta-item-text">阅读时长</span>
                 
                 <span title="阅读时长">
-                  1
+                  2
                 </span>
               
             </div>
@@ -363,8 +385,31 @@
       
 
       
-        <h1 id="博客笔记"><a href="#博客笔记" class="headerlink" title="博客笔记"></a>博客笔记</h1><hr>
-<p>自2017年搭建好，再也没用过，两年后的现在<br>重拾博客</p>
+        <h2 id="pytorch-单机多卡训练模型"><a href="#pytorch-单机多卡训练模型" class="headerlink" title="pytorch 单机多卡训练模型"></a>pytorch 单机多卡训练模型</h2><h3 id="修改代码"><a href="#修改代码" class="headerlink" title="修改代码"></a>修改代码</h3><p>现在大部分github支持分布式训练，如果不支持需要做一下更改</p>
+<p>需要加入参数–local_rank</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">parser.add_argument(<span class="string">"--local_rank"</span>, type=int, default=<span class="number">0</span>)</div></pre></td></tr></table></figure>
+<p>使用local_rank初始化设备</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">device = torch.device(<span class="string">'cuda:&#123;&#125;'</span>.format(args.local_rank))</div><div class="line">torch.cuda.set_device(args.local_rank)</div><div class="line">torch.distributed.init_process_group(backend=<span class="string">"nccl"</span>, init_method=<span class="string">"env://"</span>)</div></pre></td></tr></table></figure>
+<p>创建数据加载器</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">train_sampler = DistributedSampler(train_dataset)</div><div class="line">trainloader = torch.utils.data.DataLoader(train_dataset,batch_size=config.TRAIN.BATCH_SIZE_PER_GPU, shuffle=config.TRAIN.SHUFFLE <span class="keyword">and</span> train_sampler <span class="keyword">is</span> <span class="keyword">None</span>,num_workers=config.WORKERS, sampler=train_sampler)</div></pre></td></tr></table></figure>
+<p>创建模型</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">model = nn.SyncBatchNorm.convert_sync_batchnorm(model)</div><div class="line">model = model.to(device)</div><div class="line">model = nn.parallel.DistributedDataParallel(</div><div class="line">model, device_ids=[args.local_rank], output_device=args.local_rank)</div></pre></td></tr></table></figure>
+<p>网上有很多教程，这里只做粗略介绍。</p>
+<h3 id="启动方式"><a href="#启动方式" class="headerlink" title="启动方式"></a>启动方式</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python -m torch.distributed.launch --nproc_per_node=2 train.py 参数</div></pre></td></tr></table></figure>
+<p>nproc_per_node 表示GPU的个数</p>
+<h2 id="pytorch-多机多卡训练模型"><a href="#pytorch-多机多卡训练模型" class="headerlink" title="pytorch 多机多卡训练模型"></a>pytorch 多机多卡训练模型</h2><h3 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h3><p>通过实验，发现需要多台机器之前相互可以ping通，才可以进行多机多卡训练。比如</p>
+<ul>
+<li>A主机与B主机连着同一个路由器，这样A主机与B主机是可以相互连通的。</li>
+<li>如果在A主机下的容器主机CA，和B主机下的容器主机CB，他们之前是相互独立的，CA ping不通 CB，同样CB ping不通CA。所以需要借助一个插件weave，把A主机的docker与B主机的docker相互连通，这样CA与CB通过虚拟网关相互连通。</li>
+</ul>
+<h4 id="weave插件的使用"><a href="#weave插件的使用" class="headerlink" title="weave插件的使用"></a>weave插件的使用</h4><p>假如现在有3台主机A、B、C。把A当作主节点，B、C当作工作节点，要求B和C可以与A在同一局域网。</p>
+<p>在A上运行<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">weave launch --host A的ip地址 --ipalloc-range 10.32.0.0/12</div></pre></td></tr></table></figure></p>
+<p>在B、C上运行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">weave launch --host A的ip地址</div></pre></td></tr></table></figure>
+<h4 id="容器创建"><a href="#容器创建" class="headerlink" title="容器创建"></a>容器创建</h4><p>在创建容器时，需要指定网络weave，这样才可以让容器之前相互连通。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nvidia-docker run -itd --net=weave --shm-size=60G --name 容器名 镜像名 /bin/bash</div></pre></td></tr></table></figure></p>
+<p>如果需要挂载数据卷，可以使用 参数-v<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nvidia-docker run -itd -v /data/g9:/data --net=weave --shm-size=60G --name 容器名 镜像名 /bin/bash</div></pre></td></tr></table></figure></p>
+<p>进入容器，通过<em>ifconfig</em>可以查看网络。</p>
+<h3 id="pytorch运行方式"><a href="#pytorch运行方式" class="headerlink" title="pytorch运行方式"></a>pytorch运行方式</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python -m torch.distributed.launch --nproc_per_node=2  --nnodes=2 --node_rank=0 --master_addr="10.44.0.0"   --master_port=6666 train.py 参数</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -392,6 +437,16 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/note/" rel="tag"><i class="fa fa-tag"></i> note</a>
+          
+            <a href="/tags/deeplearning/" rel="tag"><i class="fa fa-tag"></i> deeplearning</a>
+          
+            <a href="/tags/pytorch/" rel="tag"><i class="fa fa-tag"></i> pytorch</a>
+          
+        </div>
+      
 
       
         
@@ -401,15 +456,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/04/05/go-vue_shop/" rel="next" title="shop_go_vue">
-                <i class="fa fa-chevron-left"></i> shop_go_vue
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/10/06/pytorch走过的坑/" rel="prev" title="pytorch走过的坑">
+                pytorch走过的坑 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -538,7 +593,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#博客笔记"><span class="nav-number">1.</span> <span class="nav-text">博客笔记</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#pytorch-单机多卡训练模型"><span class="nav-number">1.</span> <span class="nav-text">pytorch 单机多卡训练模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#修改代码"><span class="nav-number">1.1.</span> <span class="nav-text">修改代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动方式"><span class="nav-number">1.2.</span> <span class="nav-text">启动方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pytorch-多机多卡训练模型"><span class="nav-number">2.</span> <span class="nav-text">pytorch 多机多卡训练模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#环境配置"><span class="nav-number">2.1.</span> <span class="nav-text">环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#weave插件的使用"><span class="nav-number">2.1.1.</span> <span class="nav-text">weave插件的使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#容器创建"><span class="nav-number">2.1.2.</span> <span class="nav-text">容器创建</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pytorch运行方式"><span class="nav-number">2.2.</span> <span class="nav-text">pytorch运行方式</span></a></li></ol></li></ol></div>
             
 
           </div>
