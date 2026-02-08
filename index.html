@@ -104,19 +104,19 @@
 <h1 id="降低时延"><a href="#降低时延" class="headerlink" title="降低时延"></a>降低时延</h1><p>假设请求并发量为B&#x3D;32，那么Attention和FFN计算的token num&#x3D;32；matmul的计算量&#x3D;2mkn；<br>在decoding阶段，matmul计算的左矩阵是上一步计算出来的且不大，所以一般在L2 cache中，在matmul计算中，数据从L2 cache加载到L0&#x2F;寄存器比较快，可以忽略；右矩阵是模型权重，需要从GPU&#x2F;NPU的global memory中加载到L0&#x2F;寄存器中，比较耗时；<br>matmul计算的M&#x3D;32，那计算比访存可以约等于M；不同的芯片自身的计算带宽比不一样；</p>
 <p>对于H20，算力为148T，内存带宽为4TB，计算带宽比37，可能M&#x3D;32，matmul算子可以做到算力利用率比较高；<br>但对于Ascend 910，算力为300T，内存带宽不到2T，计算防存比150，很难在M&#x3D;32时，发挥算力，严重memory带宽瓶劲；</p>
 <p>增大请求并发量B&#x3D;128，token num&#x3D;128时，可以发挥算力，但单token时延较高；投机推理就很重要了。</p>
-<p>投机推理相当于单次推理多个token（假设为N&#x3D;4），那并发量还是32时，但token num&#x3D;128，那么就matmul算子就可以发挥算力，从访存慢走向计算耗时；且在这个阶段，即使token量增加了3倍，但单次forward耗时，基本不会增加太多（甚至会减少），所以会有很大的收益；<br>只要一次token num&#x3D;128的推理耗时比4次token num&#x3D;32的推理耗时低，都会有降低时延上的收益；</p>
+<p>投机推理相当于单次推理多个token（假设为N&#x3D;4），那并发量还是32时，但token num&#x3D;128，那么就matmul算子就可以发挥算力，从访存慢走向计算耗时；且在这个阶段，即使token量增加了3倍，但单次forward耗时，基本不会增加太多，所以会有很大的收益；<br>只要一次token num&#x3D;128的推理耗时比4次token num&#x3D;32的推理耗时低，都会有降低时延上的收益；</p>
 <p>（以上都忽略接受率的影响，考虑到接受率以及一些其它耗时的影响，并发量*草稿token数量 &gt; 一个特定的值，投机推理会没有收益）</p>
 <h1 id="提升吞吐"><a href="#提升吞吐" class="headerlink" title="提升吞吐"></a>提升吞吐</h1><p>在token num&#x3D;128的情况下，对于无投机推理的场景，需要128个请求；对于投机4个token的场景，需要32个请求；<br>从计算量角度看，同样是128个token，模型的计算量基本是一样的，对于matmul是一样的，有投机的attention core计算量稍微大一点，但也可以忽略；</p>
 <p>从访存角度看，模型访存分为模型权重和kv cache；模型权重访存量是一样，但kv cache的防存是不一样的，投机方式kv cache量要小几倍。</p>
 <p>从attention core计算访存比上分析，attention core的计算量是BNS1S2D，S2表示kv cache长度，S1表示Q的长度（单个请求Q的token数量），访存量是BN2S2D，N2表示KV head num，attention core的计算访存比为N1&#x2F;N2*S1，和B是无关的；</p>
 <p>所以模型结构在确定以后，增大请求量其实也无法缓解attention core访存的瓶颈；但投机推理，将S1增大，其实更有利于attention core计算发挥算力；</p>
-<p>所以attention core理论上，耗时可以降低很多，假设attention core算子计算占比20%，单算子性能提升N倍，理论上同样是token num&#x3D;128的情况下，单次forward的耗时会更低，吞吐会增大。</p>
+<p>所以attention core理论上，耗时可以降低很多，假设attention core算子计算占比20%，单算子性能提升N倍，理论上相等的token num情况下，单次forward的耗时会更低，吞吐会增大。</p>
 <p>（考虑到接受率以及一些其它耗时的影响，草稿token数量 &gt; 一个特定的值，吞吐会降低）</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://c-dafan.github.io/2026/02/08/spec%E6%8A%95%E6%9C%BA%E6%8E%A8%E7%90%86%E7%9A%84%E6%80%9D%E8%80%83/" data-id="cmldsnanb0000f6fy2cwie63g" data-title="spec投机推理的思考" class="article-share-link">分享</a>
+      <a data-url="http://c-dafan.github.io/2026/02/08/spec%E6%8A%95%E6%9C%BA%E6%8E%A8%E7%90%86%E7%9A%84%E6%80%9D%E8%80%83/" data-id="cmldsus1e0000g0fy27jlgpx7" data-title="spec投机推理的思考" class="article-share-link">分享</a>
       
       
       
