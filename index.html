@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>大帆</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="随手记一些想法">
+<meta property="og:type" content="website">
+<meta property="og:title" content="大帆">
+<meta property="og:url" content="http://c-dafan.github.io/index.html">
+<meta property="og:site_name" content="大帆">
+<meta property="og:description" content="随手记一些想法">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="DaFan">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="大帆" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">大帆</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">的一些思考</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://c-dafan.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-spec投机推理的思考" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/02/08/spec%E6%8A%95%E6%9C%BA%E6%8E%A8%E7%90%86%E7%9A%84%E6%80%9D%E8%80%83/" class="article-date">
+  <time class="dt-published" datetime="2026-02-08T09:19:16.000Z" itemprop="datePublished">2026-02-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/02/08/spec%E6%8A%95%E6%9C%BA%E6%8E%A8%E7%90%86%E7%9A%84%E6%80%9D%E8%80%83/">spec投机推理的思考</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="关于投机推理的一点思考"><a href="#关于投机推理的一点思考" class="headerlink" title="关于投机推理的一点思考"></a>关于投机推理的一点思考</h1><p>对于decoding阶段，单卡一般请求并发量不会很大，所以一般认为decoding阶段是memory bound；</p>
+<p>我们在做大模型推理优化时，一般会考虑投机推理，如Eagle、MTP（感觉从推理角度看mtp和eagle似乎也没什么本质区别）；从投机的原理上分析，可以有效的降低单token时延，这点也比较好理解；今天突然发现在一定程度上，不仅可以用于降低时延，还可以提升最大吞吐；<br>下面从计算和访存角度简单分析一下：</p>
+<h1 id="降低时延"><a href="#降低时延" class="headerlink" title="降低时延"></a>降低时延</h1><p>假设请求并发量为B&#x3D;32，那么Attention和FFN计算的token num&#x3D;32；matmul的计算量&#x3D;2mkn；<br>在decoding阶段，matmul计算的左矩阵是上一步计算出来的且不大，所以一般在L2 cache中，在matmul计算中，数据从L2 cache加载到L0&#x2F;寄存器比较快，可以忽略；右矩阵是模型权重，需要从GPU&#x2F;NPU的global memory中加载到L0&#x2F;寄存器中，比较耗时；<br>matmul计算的M&#x3D;32，那计算比访存可以约等于M；不同的芯片自身的计算带宽比不一样；</p>
+<p>对于H20，算力为148T，内存带宽为4TB，计算带宽比37，可能M&#x3D;32，matmul算子可以做到算力利用率比较高；<br>但对于Ascend 910，算力为300T，内存带宽不到2T，计算防存比150，很难在M&#x3D;32时，发挥算力，严重memory带宽瓶劲；</p>
+<p>增大请求并发量B&#x3D;128，token num&#x3D;128时，可以发挥算力，但单token时延较高；投机推理就很重要了。</p>
+<p>投机推理相当于单次推理多个token（假设为N&#x3D;4），那并发量还是32时，但token num&#x3D;128，那么就matmul算子就可以发挥算力，从访存慢走向计算耗时；且在这个阶段，即使token量增加了3倍，但单次forward耗时，基本不会增加太多（甚至会减少），所以会有很大的收益；<br>只要一次token num&#x3D;128的推理耗时比4次token num&#x3D;32的推理耗时低，都会有降低时延上的收益；</p>
+<p>（以上都忽略接受率的影响，考虑到接受率以及一些其它耗时的影响，并发量*草稿token数量 &gt; 一个特定的值，投机推理会没有收益）</p>
+<h1 id="提升吞吐"><a href="#提升吞吐" class="headerlink" title="提升吞吐"></a>提升吞吐</h1><p>在token num&#x3D;128的情况下，对于无投机推理的场景，需要128个请求；对于投机4个token的场景，需要32个请求；<br>从计算量角度看，同样是128个token，模型的计算量基本是一样的，对于matmul是一样的，有投机的attention core计算量稍微大一点，但也可以忽略；</p>
+<p>从访存角度看，模型访存分为模型权重和kv cache；模型权重访存量是一样，但kv cache的防存是不一样的，投机方式kv cache量要小几倍。</p>
+<p>从attention core计算访存比上分析，attention core的计算量是BNS1S2D，S2表示kv cache长度，S1表示Q的长度（单个请求Q的token数量），访存量是BN2S2D，N2表示KV head num，attention core的计算访存比为N1&#x2F;N2*S1，和B是无关的；</p>
+<p>所以模型结构在确定以后，增大请求量其实也无法缓解attention core访存的瓶颈；但投机推理，将S1增大，其实更有利于attention core计算发挥算力；</p>
+<p>所以attention core理论上，耗时可以降低很多，假设attention core算子计算占比20%，单算子性能提升N倍，理论上同样是token num&#x3D;128的情况下，单次forward的耗时会更低，吞吐会增大。</p>
+<p>（考虑到接受率以及一些其它耗时的影响，草稿token数量 &gt; 一个特定的值，吞吐会降低）</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://c-dafan.github.io/2026/02/08/spec%E6%8A%95%E6%9C%BA%E6%8E%A8%E7%90%86%E7%9A%84%E6%80%9D%E8%80%83/" data-id="cmldshwp50000s3fy66tmgrip" data-title="spec投机推理的思考" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/" rel="tag">大模型推理</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/" rel="tag">大模型推理</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86/" style="font-size: 10px;">大模型推理</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/02/">二月 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/02/08/spec%E6%8A%95%E6%9C%BA%E6%8E%A8%E7%90%86%E7%9A%84%E6%80%9D%E8%80%83/">spec投机推理的思考</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 DaFan<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
